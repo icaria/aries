@@ -9,7 +9,9 @@
 #include <iostream>
 #include <queue>
 #include <sstream>
-
+#include <fstream>
+#include <cstdlib>
+using namespace std;
 
 queue<int> *packets;
 int TICKS = 5000; 
@@ -25,12 +27,12 @@ int Departure ( int t ) {
         return 0;
     }
     
-    
+   	return 0; 
 }
 
 void Start_simulation (int ticks) {
     
-    for (t=1; t<= ticks; t++) {
+    for (int t=1; t<= ticks; t++) {
         Arrival (t); /* call the arrival procedure*/
         Departure (t); /*call the departure procedure*/
     }
@@ -67,10 +69,10 @@ int main(int argc, char* argv[]) {
 
 	switch(argc) {
 		case 5: // M/D/1/K
-		   if (!convert(k, argv[4]) 
-                        usage(argv);
+		   if (!convert(k, argv[4])) 
+                   usage(argv);
 		case 4:
-		   if (!convert(k, argv[3]) {                   
+		   if (!convert(k, argv[3])) {                   
                      usage(argv);
                    }
                    break;
