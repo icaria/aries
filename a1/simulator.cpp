@@ -1,8 +1,7 @@
-//
+//  ECE358 Lab 1
 //  simulator.cpp
-//  
 //
-//  Created by Stephen Chen on 12-05-29.
+//  Created by Stephen Chen and Gabriella Grandilli on 12-05-29.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
@@ -13,48 +12,54 @@
 #include <cstdlib>
 using namespace std;
 
-queue<int> *packets;
-int TICKS = 5000; 
+queue<int> packets;
+int TICKS = 5000; //5000000000
 
 void Arrival ( int t ) {
-    /* Generate a packet as per the exponential distribution and insert the packet in the queue (an array or a linked list)*/ 
+    // Generate a packet as per the exponential distribution 
+	// insert the packet in the queue (an array or a linked list)*/ 
+	//queue.push(packet);
 }
 
 int Departure ( int t ) {
-    /* Check the queue for the packet, if head of the queue is empty, return 0 else if the queue is non-empty delete the packet from the queue after an elapse of the deterministic service time. */
     
-    if(packets->empty()) {
+	// If the head of the queue is empty/the queue is empty
+    if(packets.empty()) {
         return 0;
     }
-    
-   	return 0; 
+	else {
+		// delete the packet from the queue after an elapse of the deterministic service time
+		int deleted_packet = 0;
+   		return deleted_packet; 
+	}
 }
 
 void Start_simulation (int ticks) {
     
     for (int t=1; t<= ticks; t++) {
-        Arrival (t); /* call the arrival procedure*/
-        Departure (t); /*call the departure procedure*/
+        Arrival(t);
+        Departure(t);
     }
 }
 
-<<<<<<< HEAD
 void Compute_performances () {
     /*Calculate and display the results such as average number of packets in queue, average delay in queue and idle time for the server. */
 }
 
 //========================================================
 // Main
+//========================================================
 
-
-bool convert( int &val, char *buffer ) {		// convert C string to integer
+// Helper method to convert C string to integer
+bool convert( int &val, char *buffer ) {
     std::stringstream ss( buffer );			// connect stream and buffer
     ss >> dec >> val;					// convert integer from buffer
     return ! ss.fail() &&				// conversion successful ?
 	// characters after conversion all blank ?
 	string( buffer ).find_first_not_of( " ", ss.tellg() ) == string::npos;
-} // convert
+}
 
+// Helper method for input parameters
 void usage( char *argv[] ) {
     cerr << "Usage: " << argv[0]
 	 << " n "
@@ -63,7 +68,7 @@ void usage( char *argv[] ) {
 	 << " C " 
 	 << " K (optional)" << endl;
     exit( EXIT_FAILURE );				// TERMINATE
-} // usage
+}
 
 int main(int argc, char* argv[]) {
 	int n, lamda, l, c, k;
@@ -74,40 +79,31 @@ int main(int argc, char* argv[]) {
                    usage(argv);
 		case 4:
 		   if (!convert(k, argv[3])) {                   
-                     usage(argv);
-                   }
-                   break;
-                case 3:         // two options is invalid
-                case 2:         // one option is invalid
-                case 1:         // zero options is invalid
+               usage(argv);
+            }
+           break;
+        case 3:         // two options is invalid
+        case 2:         // one option is invalid
+        case 1:         // zero options is invalid
 		default:
 	           usage(argv);
 	}
 
 
-
     /*Initialise important terms such as t_arrival = exponential r.v, # of pkts in queue = 0, t_departure = t_arrival ( this implies that first time departure will be called as soon as a packet arrives in the queue*/
-=======
-void Arrival ( int t ) {
-    /* Generate a packet as per the exponential distribution and insert the packet in the queue (an array or a linked list)*/ 
     
-    
-    
-}
 
-int Departure ( int t ) {
-    /* Check the queue for the packet, if head of the queue is empty, return 0 else if the queue is non-empty delete the packet from the queue after an elapse of the deterministic service time. */
-    
-    if(packets->empty()) {
-        return 0;
-    } else {
-        
-        
-    }
->>>>>>> test
-    
-    packets = new queue<int>();
-    
+   //----------------
+   // Initialize variables
+	int t_arrival = 0;
+	int t_depart = t_arrival;
+	//int numPackets  // shouldn't need because we can get the size from queue
+  
+   
+   //----------------
+   // Start simulation
+    /*
     Start_simulation (TICKS);
     Compute_performances ( );
+	*/
 }
