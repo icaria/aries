@@ -1,4 +1,4 @@
-//  ECE358 Lab 1
+-//  ECE358 Lab 1
 //  simulator.cpp
 //
 //  Created by Stephen Chen and Gabriella Grandilli on 12-05-29.
@@ -88,7 +88,6 @@ int main(int argc, char* argv[]) {
 		default:
 	           usage(argv);
 	}
-
 
     /*Initialise important terms such as t_arrival = exponential r.v, # of pkts in queue = 0, t_departure = t_arrival ( this implies that first time departure will be called as soon as a packet arrives in the queue*/
     
