@@ -71,7 +71,7 @@ unsigned long long totalPacketCount; // Sum of packet counts.
 void UpdateArrivalTime()
 {
     double u = genrand();
-    t_arrival = ((2 / lambda) * u) + 1;
+    t_arrival = (unsigned long long)(((2 / lambda) * u) + 1);
 }
 
 void Arrival ( long long t ) {
@@ -88,7 +88,6 @@ void Arrival ( long long t ) {
     else {
         Packet pack;
         pack.arrivalTime = t_arrival;
-        pack.departTime = t_arrival + serviceTime;
         packets.push( pack );
     }
 }
@@ -101,19 +100,15 @@ int Departure ( long long t ) {
         t_depart++;
         idle_ticks ++;
         return 0;
-    }
-	else {
+    } else {
 		
-  
         // delete the packet from the queue after an elapse of the deterministic service time
         
         Packet pack = packets.front();
         totalQueueDelay += t - pack.arrivalTime;
         remainingServiceTime = serviceTime;
         t_depart += serviceTime;
-        
-        
-        
+
    		return 1; 
 	}
 }
@@ -154,13 +149,13 @@ void Start_simulation (long long ticks) {
 void Compute_performances () {
     /*Calculate and display the results such as average number of packets in queue, average delay in queue and idle time for the server. */
     
-    double propIdle = idle_ticks / totalTicks;
+    double propIdle = idle_ticks / total_ticks;
     double probLoss = packetsLost / numPackets;
-    double avgPacketsInQueue = totalPacketCount / totalTicks;
+    double avgPacketsInQueue = totalPacketCount / total_ticks;
     double avgQueueDelay = totalQueueDelay / numPackets;
     double avgSojournTime = totalSojournTime / numPackets;
     double totalSojournTime = totalSojournTime;
-        
+
     /*
     //cout << "-- M/D/1/K --" << endl;
     cout << "t is:" << ticks << endl;
@@ -225,16 +220,14 @@ int main(int argc, char* argv[]) {
    
     //----------------
    // Initialize variables
-	float u = genrand();
     lambda = lambdaPerSecond / 1000000;
     
-    t_arrival = (2/lambda) * u; //exponential random variable
+    t_arrival = (unsigned long long)((2 / lambda) * genrand()); //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = T * 1;
     idle_ticks = 0;
 	numPackets = 0;  // shouldn't need because we can get the size from queue ??
     totalQueueDelay = 0;
-    totalIdleTime = 0;
     totalSojournTime = 0;
     totalPacketCount = 0;
   
