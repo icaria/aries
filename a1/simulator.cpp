@@ -22,7 +22,8 @@ extern void sgenrand(unsigned long seed);
 
 struct Packet
 {
-    long long arrivalTime;
+    unsigned long long arrivalTime;
+    unsigned long long departTime;
 };
 
 // Input parameters
@@ -69,43 +70,50 @@ unsigned long long totalPacketCount;
 
 // Service process is "D" -- each packet will receive the same constant service time
 
+void UpdateArrivalTime()
+{
+    double u = genrand();
+    t_arrival = ((2 / lambda) * u) + 1;
+}
+
 void Arrival ( long long t ) {
     // Generate a packet as per the exponential distribution 
 	// insert the packet in the queue (an array or a linked list)*/ 
 	//queue.push(packet);
     
     numPackets++;
+    UpdateArrivalTime();
     
-    if( bounded ) {
-        if( packets.size() < K ) {
-            Packet pack; 
-            pack.arrivalTime = t;
-            packets.push( pack );
-        } else {
-            packetsLost++;
-        }
-    } else {
+    if (bounded && packets.size() == K) {
+        packetsLost++;
+    }
+    else {
         Packet pack;
-        pack.arrivalTime = t;
+        pack.arrivalTime = t_arrival;
+        pack.departTime = t_arrival + serviceTime;
         packets.push( pack );
     }
-    
 }
 
 int Departure ( long long t ) {
     
 	// If the head of the queue is empty/the queue is empty
     if(packets.empty()) {
-        
+        remainingServiceTime = 0;
+        t_depart++;
+        idle_ticks ++;
         return 0;
     }
 	else {
-		// delete the packet from the queue after an elapse of the deterministic service time
+		
+                
+        // delete the packet from the queue after an elapse of the deterministic service time
         
         Packet pack = packets.front();
         totalQueueDelay += t - pack.arrivalTime;
         remainingServiceTime = serviceTime;
-        packets.pop();
+        
+        //packets.pop();
         
    		return 1; 
 	}
@@ -120,22 +128,18 @@ void Start_simulation (long long ticks) {
     
     for (t=1; t<= ticks; t++) {
         
+        // If it is time for the packet to enter the queue, call arrive
+        if (t == t_arrival) {
             Arrival(t);
-            double u = genrand();
-            t_arrival = ((2 / lambda) * u) + 1;
-             
-        
-            if( Departure(t) == 0 ) {
-                remainingServiceTime = 0;
-                t_depart++;
-                idle_ticks ++;
-            } else {
-                t_depart += serviceTime;
-            }
+        }
+        else if (t == t_depart) {
+            Departure(t);
+        }
         
         if ( remainingServiceTime > 0 ) {
             
             remainingServiceTime--;
+            t_depart++;
              
             if( remainingServiceTime == 0 ) {
                 Packet pack = packets.front();
@@ -229,7 +233,7 @@ int main(int argc, char* argv[]) {
 	float u = genrand();
     lambda = lambdaPerSecond / 1000000;
     
-    t_arrival = (2/lambda) * u + 1; //exponential random variable
+    t_arrival = (2/lambda) * u; //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = T * 1;
     idle_ticks = 0;
