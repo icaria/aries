@@ -147,8 +147,8 @@ void Compute_performances () {
     double totalSojournTime = totalSojournTime;
 
     
-    cout << "t is:" << ticks << endl;
-    
+    cout << "t is: " << ticks << endl;
+    cout << "numpackets" << numPackets << endl;
     cout << "Avg. packets in queue: " << totalPacketCount / ticks << endl;
     
     cout << "Avg. queue delay: " << totalQueueDelay / numPackets << endl;
@@ -196,6 +196,8 @@ int main(int argc, char* argv[]) {
             || !convert(lambdaPerSecond, argv[2]) || !convert(T, argv[1])) {                   
                usage(argv);
             }
+            lambda = ((double)lambdaPerSecond / 1000000); // convert to microseconds
+            
             break;
         case 4:         // three options is invalid
         case 3:         // two options is invalid
@@ -208,11 +210,12 @@ int main(int argc, char* argv[]) {
    
     //----------------
    // Initialize variables
-    lambda = lambdaPerSecond / 1000000;
-    
+
+   
     t_arrival = (unsigned long long)((2 / lambda) * genrand()); //exponential random variable
+    cout << t_arrival << endl;
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
-    ticks = T * 1;
+    ticks = T * 1000;
     idle_ticks = 0;
 	numPackets = 0;  // shouldn't need because we can get the size from queue ??
     totalQueueDelay = 0;
