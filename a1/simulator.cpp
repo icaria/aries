@@ -89,7 +89,6 @@ void Arrival ( long long t ) {
     else {
         Packet pack;
         pack.arrivalTime = t_arrival;
-        pack.departTime = t_arrival + serviceTime;
         packets.push( pack );
     }
 }
@@ -102,10 +101,8 @@ int Departure ( long long t ) {
         t_depart++;
         idle_ticks ++;
         return 0;
-    }
-	else {
+    } else {
 		
-                
         // delete the packet from the queue after an elapse of the deterministic service time
         
         Packet pack = packets.front();
@@ -156,14 +153,13 @@ void Start_simulation (long long ticks) {
 void Compute_performances () {
     /*Calculate and display the results such as average number of packets in queue, average delay in queue and idle time for the server. */
     
-    double propIdle = idle_ticks / totalTicks;
+    double propIdle = idle_ticks / total_ticks;
     double probLoss = packetsLost / numPackets;
-    double avgPacketsInQueue = totalPacketCount / totalTicks;
+    double avgPacketsInQueue = totalPacketCount / total_ticks;
     double avgQueueDelay = totalQueueDelay / numPackets;
     double avgSojournTime = totalSojournTime / numPackets;
     double totalSojournTime = totalSojournTime;
     double totalIdleTime = totalIdleTime;
-    double totalTicks = total_ticks;
     
     /*
     //cout << "-- M/D/1/K --" << endl;
