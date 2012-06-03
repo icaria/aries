@@ -152,10 +152,14 @@ void Start_simulation (long long ticks) {
 void Compute_performances () {
     /*Calculate and display the results such as average number of packets in queue, average delay in queue and idle time for the server. */
     
-    
-    double pIdle = idle_ticks / total_ticks;
-    double pLoss = packetsLost / numPackets;
-    
+    double propIdle = idle_ticks / totalTicks;
+    double probLoss = packetsLost / numPackets;
+    double avgPacketsInQueue = totalPacketCount / totalTicks;
+    double avgQueueDelay = totalQueueDelay / numPackets;
+    double avgSojournTime = totalSojournTime / numPackets;
+    double totalSojournTime = totalSojournTime;
+    double totalIdleTime = totalIdleTime;
+    double totalTicks = total_ticks;
     
     /*
     //cout << "-- M/D/1/K --" << endl;
