@@ -43,6 +43,12 @@ long long ticks;
 bool bounded;
 int numPackets;
 int packetLoss;
+int serviceTime;
+int remainingServiceTime;
+int totalQueueDelay;
+int totalIdleTime;
+int totalSojournTime;
+int totalPacketCount;
 
 //===================================================
 // Packet handling methods
@@ -87,18 +93,53 @@ int Departure ( long long t ) {
 		// delete the packet from the queue after an elapse of the deterministic service time
         
         Packet pack = packets.front();
+        totalQueueDelay += t - pack.arrivalTime;
+        remainingServiceTime = serviceTime;
+        packets.pop();
         
-		int deleted_packet = 0;
-   		return deleted_packet; 
+   		return 1; 
 	}
 }
 
 void Start_simulation (long long ticks) {
     
     long long t = 0;
+    serviceTime = (int)(L/C);
+    remainingServiceTime = 0;
+    
+    
     for (t=1; t<= ticks; t++) {
-        Arrival(t);
-        Departure(t);
+        
+        if( t == t_arrival ) {
+            Arrival(t);
+            double u = genrand();
+            t_arrival += ((2 / lambda) * u) + 1;
+        }
+        
+        if( t == t_depart ) {
+            if( Departure(t) == 0 ) {
+                remainingServiceTime = 0;
+                t_depart++;
+                totalIdleTime++;
+            } else {
+                t_depart += serviceTime;
+            }
+            
+        }
+        
+        if ( remainingServiceTime > 0 ) {
+            
+            remainingServiceTime--;
+             
+            if( remainingServiceTime == 0 ) {
+                Packet pack = packets.front();
+                totalSojournTime += t - pack.arrivalTime;
+                packets.pop();
+                
+            }
+        }
+        
+        totalPacketCount += numPackets;
     }
 }
 
@@ -155,16 +196,20 @@ int main(int argc, char* argv[]) {
     //----------------
    // Initialize variables
 	float u = genrand();
-    t_arrival = (-1/lambda)*log(u); //exponential random variable
-	t_depart = t_arrival;  // first time departure will be called as soon as a packet arrives in the queue
+    t_arrival = (-1/lambda) * log(u); //exponential random variable
+	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = T * 1000000;
 	numPackets = 0;  // shouldn't need because we can get the size from queue ??
+    totalQueueDelay = 0;
+    totalIdleTime = 0;
+    totalSojournTime = 0;
+    totalPacketCount = 0;
   
    
    //----------------
    // Start simulation
-    /*
+    
     Start_simulation (ticks);
     Compute_performances ( );
-	*/
+	
 }
