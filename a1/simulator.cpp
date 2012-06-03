@@ -38,18 +38,25 @@ long K;      // size of the buffer (number of packets); if not specified, infini
 
 queue<Packet> packets;
 
-long long t_arrival;
-long long t_depart;
-long long ticks;
+unsigned long long t_arrival;
+unsigned long long t_depart;
+
+// Ticks
+unsigned long long ticks;
+unsigned long long idle_ticks;
+unsigned long long total_ticks;
+
 bool bounded;
 int numPackets;
 int serviceTime;
 int remainingServiceTime;
-long long packetLoss;
-long long totalQueueDelay;
-long long totalIdleTime;
-long long totalSojournTime;
-long long totalPacketCount;
+
+unsigned long long packetsLost;
+
+unsigned long long totalQueueDelay;
+unsigned long long totalIdleTime;
+unsigned long long totalSojournTime;
+unsigned long long totalPacketCount;
 
 //===================================================
 // Packet handling methods
@@ -74,7 +81,7 @@ void Arrival ( long long t ) {
             pack.arrivalTime = t;
             packets.push( pack );
         } else {
-            packetLoss++;
+            packetsLost++;
         }
     } else {
         Packet pack;
@@ -88,6 +95,7 @@ int Departure ( long long t ) {
     
 	// If the head of the queue is empty/the queue is empty
     if(packets.empty()) {
+        
         return 0;
     }
 	else {
@@ -111,22 +119,18 @@ void Start_simulation (long long ticks) {
     
     for (t=1; t<= ticks; t++) {
         
-        if( t == t_arrival ) {
             Arrival(t);
             double u = genrand();
             t_arrival += ((2 / lambda) * u) + 1;
-        }
+             
         
-        if( t == t_depart ) {
             if( Departure(t) == 0 ) {
                 remainingServiceTime = 0;
                 t_depart++;
-                totalIdleTime++;
+                idle_ticks ++;
             } else {
                 t_depart += serviceTime;
             }
-            
-        }
         
         if ( remainingServiceTime > 0 ) {
             
@@ -147,6 +151,12 @@ void Start_simulation (long long ticks) {
 void Compute_performances () {
     /*Calculate and display the results such as average number of packets in queue, average delay in queue and idle time for the server. */
     
+    
+    double pIdle = idle_ticks / total_ticks;
+    double pLoss = packetsLost / numPackets;
+    
+    
+    /*
     //cout << "-- M/D/1/K --" << endl;
     cout << "t is:" << ticks << endl;
     //avg_packets_in_queue = (long double)total_packets_in_queue / (long double)t;
@@ -158,9 +168,9 @@ void Compute_performances () {
     cout << "Avg. sojourn time: " << totalSojournTime / numPackets << endl;
     cout << "Total Idle t: " << totalIdleTime << endl;
     cout << "Proportion of time idle: " << totalIdleTime / ticks << endl;
-    cout << "Probability of packet loss: " << packetLoss / numPackets << endl;
+    cout << "Probability of packet loss: " << packetsLost / numPackets << endl;
     cout << endl;
-    
+    */
 }
 
 //========================================================
@@ -217,6 +227,7 @@ int main(int argc, char* argv[]) {
     t_arrival = (-1/lambda) * log(u); //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = T * 1;
+    idle_ticks = 0;
 	numPackets = 0;  // shouldn't need because we can get the size from queue ??
     totalQueueDelay = 0;
     totalIdleTime = 0;
