@@ -111,6 +111,7 @@ int Departure ( long long t ) {
         Packet pack = packets.front();
         totalQueueDelay += t - pack.arrivalTime;
         remainingServiceTime = serviceTime;
+        t_depart += serviceTime;
         
         //packets.pop();
         
