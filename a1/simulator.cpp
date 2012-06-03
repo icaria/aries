@@ -122,7 +122,7 @@ void Start_simulation (long long ticks) {
         
             Arrival(t);
             double u = genrand();
-            t_arrival += ((2 / lambda) * u) + 1;
+            t_arrival = ((2 / lambda) * u) + 1;
              
         
             if( Departure(t) == 0 ) {
