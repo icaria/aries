@@ -214,7 +214,7 @@ int main(int argc, char* argv[]) {
 	float u = genrand();
     lambda = lambdaPerSecond / 1000000;
     
-    t_arrival = (-1/lambda) * log(u); //exponential random variable
+    t_arrival = (2/lambda) * u + 1; //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = T * 1;
 	numPackets = 0;  // shouldn't need because we can get the size from queue ??
