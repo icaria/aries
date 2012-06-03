@@ -13,7 +13,6 @@
 #include <sstream>
 #include <cstdlib>
 #include <math.h>
-//#include "RandomForLab1.c"
 
 using namespace std;
 
@@ -62,12 +61,6 @@ unsigned long long totalPacketCount; // Sum of packet counts.
 // Packet handling methods
 //===================================================
 
-// Arrival is "M" -- memoryless;
-// distribution of time between successive arrivals is identical, 
-// is independent from one inter-arrival to another and is exponentially distributed
-
-// Service process is "D" -- each packet will receive the same constant service time
-
 void UpdateArrivalTime()
 {
     double u = genrand();
@@ -93,22 +86,19 @@ void Arrival ( long long t ) {
 }
 
 int Departure ( long long t ) {
-    
 	// If the head of the queue is empty/the queue is empty
     if(packets.empty()) {
         remainingServiceTime = 0;
         t_depart++;
         idle_ticks ++;
         return 0;
-    } else {
-		
+    } 
+    else {
         // delete the packet from the queue after an elapse of the deterministic service time
-        
         Packet pack = packets.front();
         totalQueueDelay += t - pack.arrivalTime;
         remainingServiceTime = serviceTime;
         t_depart += serviceTime;
-
    		return 1; 
 	}
 }
@@ -156,20 +146,18 @@ void Compute_performances () {
     double avgSojournTime = totalSojournTime / numPackets;
     double totalSojournTime = totalSojournTime;
 
-    /*
-    //cout << "-- M/D/1/K --" << endl;
+    
     cout << "t is:" << ticks << endl;
-    //avg_packets_in_queue = (long double)total_packets_in_queue / (long double)t;
+    
     cout << "Avg. packets in queue: " << totalPacketCount / ticks << endl;
-    //avg_queue_delay = (long double)total_queue_delay / (long double)num_packets;
+    
     cout << "Avg. queue delay: " << totalQueueDelay / numPackets << endl;
     cout << "Total sojourn time: " << totalSojournTime << endl;
-    //avg_sojourn_time = (long double)total_sojourn_time / (long double)num_packets;
+    
     cout << "Avg. sojourn time: " << totalSojournTime / numPackets << endl;
     
     cout << "Probability of packet loss: " << packetsLost / numPackets << endl;
     cout << endl;
-    */
 }
 
 //========================================================
@@ -235,7 +223,7 @@ int main(int argc, char* argv[]) {
    //----------------
    // Start simulation
     
-    Start_simulation (ticks);
-    Compute_performances ( );
+    Start_simulation(ticks);
+    Compute_performances();
 	
 }
