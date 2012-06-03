@@ -1,24 +1,33 @@
+//===================================================
 //  ECE358 Lab 1
 //  simulator.cpp
-//
 //  Created by Stephen Chen and Gabriella Grandilli on 12-05-29.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
+//  To compile and run:
+//  g++ simulator.cpp
+//  ./a.out T lamda L C K
+//===================================================
 
 #include <iostream>
 #include <queue>
 #include <sstream>
-#include <fstream>
 #include <cstdlib>
 using namespace std;
+
+extern double genrand();
+extern void sgenrand(unsigned long seed);
 
 struct packet
 {
     long long arrivalTime;
 };
 
+// Global variables
 queue<packet> packets;
-long long TICKS = 5000; //5000000000
+
+//===================================================
+// Packet handling methods
+//===================================================
 
 void Arrival ( long long t ) {
     // Generate a packet as per the exponential distribution 
@@ -68,56 +77,58 @@ bool convert( int &val, char *buffer ) {
 // Helper method for input parameters
 void usage( char *argv[] ) {
     cerr << "Usage: " << argv[0]
-	 << " n "
-	 << " lamda "
-	 << " L "
-	 << " C " 
-	 << " K (optional)" << endl;
+	 << " T  lamda  L  C  K (optional)" << endl;
     exit( EXIT_FAILURE );				// TERMINATE
 }
 
 int main(int argc, char* argv[]) {
 	int lamda; // number packets generated per number arrived (packets per second)
-    int l; //length
-    int c; // transmission rate of the output link (bits per second)
-    int n;
-    int k; // size of the buffer (number of packets); if not specified, infinite
+    int L; //length
+    int C; // transmission rate of the output link (bits per second)
+    int T;
+    int K; // size of the buffer (number of packets); if not specified, infinite
     
     bool isK = false;
 
+    // Order of arguments: T lamda L C K
 	switch(argc) {
-		case 5: // M/D/1/K
-            if (!convert(k, argv[4])) 
+		case 6: // M/D/1/K
+            if (!convert(K, argv[5])) 
             {
                 usage(argv);
             }
             isK = true;
-		case 4:
-            if (!convert(k, argv[3])) {                   
+		case 5:
+            if (!convert(C, argv[4]) || !convert(L, argv[3]) 
+            || !convert(lamda, argv[2]) || !convert(T, argv[1])) {                   
                usage(argv);
             }
             break;
+        case 4:         // three options is invalid
         case 3:         // two options is invalid
         case 2:         // one option is invalid
         case 1:         // zero options is invalid
 		default:
-	           usage(argv);
+	        usage(argv);
+            break;
 	}
 
-    /*Initialise important terms such as t_arrival = exponential r.v, # of pkts in queue = 0, t_departure = t_arrival ( this implies that first time departure will be called as soon as a packet arrives in the queue*/
+    float u;
+    u = genrand();
     
-
+    /*Initialise important terms such as t_arrival = exponential r.v, # of pkts in queue = 0, t_departure = t_arrival ( this implies that first time departure will be called as soon as a packet arrives in the queue*/
    //----------------
    // Initialize variables
 	int t_arrival = 0;
 	int t_depart = t_arrival;
+    long long ticks = T * 1000000;
 	//int numPackets  // shouldn't need because we can get the size from queue
   
    
    //----------------
    // Start simulation
     /*
-    Start_simulation (TICKS);
+    Start_simulation (ticks);
     Compute_performances ( );
 	*/
 }
