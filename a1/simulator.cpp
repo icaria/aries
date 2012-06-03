@@ -72,7 +72,7 @@ unsigned long long totalPacketCount; // Sum of packet counts.
 void UpdateArrivalTime()
 {
     double u = genrand();
-    t_arrival = ((2 / lambda) * u) + 1;
+    t_arrival = (unsigned long long)(((2 / lambda) * u) + 1);
 }
 
 void Arrival ( long long t ) {
@@ -109,9 +109,6 @@ int Departure ( long long t ) {
         totalQueueDelay += t - pack.arrivalTime;
         remainingServiceTime = serviceTime;
         t_depart += serviceTime;
-        
-        //packets.pop();
-        
    		return 1; 
 	}
 }
@@ -226,10 +223,9 @@ int main(int argc, char* argv[]) {
    
     //----------------
    // Initialize variables
-	float u = genrand();
     lambda = lambdaPerSecond / 1000000;
     
-    t_arrival = (2/lambda) * u; //exponential random variable
+    t_arrival = (unsigned long long)((2 / lambda) * genrand()); //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = T * 1;
     idle_ticks = 0;
