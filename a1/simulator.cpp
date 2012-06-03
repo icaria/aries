@@ -27,11 +27,12 @@ struct Packet
 
 // Input parameters
 
-int T;
-int lambda;  // number packets generated per number arrived (packets per second)
-int L;      //length
-int C;      // transmission rate of the output link (bits per second)
-int K;      // size of the buffer (number of packets); if not specified, infinite
+long T;
+long lambdaPerSecond;  // number packets generated per number arrived (packets per second)
+long lambda;
+long L;      //length
+long C;      // transmission rate of the output link (bits per second)
+long K;      // size of the buffer (number of packets); if not specified, infinite
 
 // Global variables
 
@@ -42,13 +43,13 @@ long long t_depart;
 long long ticks;
 bool bounded;
 int numPackets;
-int packetLoss;
 int serviceTime;
 int remainingServiceTime;
-int totalQueueDelay;
-int totalIdleTime;
-int totalSojournTime;
-int totalPacketCount;
+long long packetLoss;
+long long totalQueueDelay;
+long long totalIdleTime;
+long long totalSojournTime;
+long long totalPacketCount;
 
 //===================================================
 // Packet handling methods
@@ -145,6 +146,21 @@ void Start_simulation (long long ticks) {
 
 void Compute_performances () {
     /*Calculate and display the results such as average number of packets in queue, average delay in queue and idle time for the server. */
+    
+    //cout << "-- M/D/1/K --" << endl;
+    cout << "t is:" << ticks << endl;
+    //avg_packets_in_queue = (long double)total_packets_in_queue / (long double)t;
+    cout << "Avg. packets in queue: " << totalPacketCount / ticks << endl;
+    //avg_queue_delay = (long double)total_queue_delay / (long double)num_packets;
+    cout << "Avg. queue delay: " << totalQueueDelay / numPackets << endl;
+    cout << "Total sojourn time: " << totalSojournTime << endl;
+    //avg_sojourn_time = (long double)total_sojourn_time / (long double)num_packets;
+    cout << "Avg. sojourn time: " << totalSojournTime / numPackets << endl;
+    cout << "Total Idle t: " << totalIdleTime << endl;
+    cout << "Proportion of time idle: " << totalIdleTime / ticks << endl;
+    cout << "Probability of packet loss: " << packetLoss / numPackets << endl;
+    cout << endl;
+    
 }
 
 //========================================================
@@ -152,7 +168,7 @@ void Compute_performances () {
 //========================================================
 
 // Helper method to convert C string to integer
-bool convert( int &val, char *buffer ) {
+bool convert( long &val, char *buffer ) {
     std::stringstream ss( buffer );			// connect stream and buffer
     ss >> dec >> val;					// convert integer from buffer
     return ! ss.fail() &&				// conversion successful ?
@@ -180,7 +196,7 @@ int main(int argc, char* argv[]) {
             bounded = true;
 		case 5:
             if (!convert(C, argv[4]) || !convert(L, argv[3]) 
-            || !convert(lambda, argv[2]) || !convert(T, argv[1])) {                   
+            || !convert(lambdaPerSecond, argv[2]) || !convert(T, argv[1])) {                   
                usage(argv);
             }
             break;
@@ -196,9 +212,11 @@ int main(int argc, char* argv[]) {
     //----------------
    // Initialize variables
 	float u = genrand();
+    lambda = lambdaPerSecond / 1000000;
+    
     t_arrival = (-1/lambda) * log(u); //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
-    ticks = T * 1000000;
+    ticks = T * 1;
 	numPackets = 0;  // shouldn't need because we can get the size from queue ??
     totalQueueDelay = 0;
     totalIdleTime = 0;
