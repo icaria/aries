@@ -56,7 +56,7 @@ unsigned long long packetsLost;
 unsigned long long totalQueueDelay;
 unsigned long long totalIdleTime;
 unsigned long long totalSojournTime;
-unsigned long long totalPacketCount;
+unsigned long long totalPacketCount; // Sum of packet counts.
 
 
 //===================================================
@@ -113,6 +113,8 @@ int Departure ( long long t ) {
         remainingServiceTime = serviceTime;
         t_depart += serviceTime;
         
+        //packets.pop();
+        
    		return 1; 
 	}
 }
@@ -137,11 +139,13 @@ void Start_simulation (long long ticks) {
         if ( remainingServiceTime > 0 ) {
             
             remainingServiceTime--;
+            t_depart++;
              
             if( remainingServiceTime == 0 ) {
                 Packet pack = packets.front();
                 totalSojournTime += t - pack.arrivalTime;
                 packets.pop();
+                
             }
         }
         
