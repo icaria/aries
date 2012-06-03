@@ -58,6 +58,7 @@ unsigned long long totalIdleTime;
 unsigned long long totalSojournTime;
 unsigned long long totalPacketCount;
 
+
 //===================================================
 // Packet handling methods
 //===================================================
