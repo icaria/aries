@@ -82,11 +82,11 @@ void usage( char *argv[] ) {
 }
 
 int main(int argc, char* argv[]) {
-	int lamda; // number packets generated per number arrived (packets per second)
-    int L; //length
-    int C; // transmission rate of the output link (bits per second)
     int T;
-    int K; // size of the buffer (number of packets); if not specified, infinite
+	int lamda;  // number packets generated per number arrived (packets per second)
+    int L;      //length
+    int C;      // transmission rate of the output link (bits per second)
+    int K;      // size of the buffer (number of packets); if not specified, infinite
     
     bool isK = false;
 
@@ -110,12 +110,9 @@ int main(int argc, char* argv[]) {
         case 1:         // zero options is invalid
 		default:
 	        usage(argv);
-            break;
 	}
 
-    float u;
-    u = genrand();
-    
+   
     /*Initialise important terms such as t_arrival = exponential r.v, # of pkts in queue = 0, t_departure = t_arrival ( this implies that first time departure will be called as soon as a packet arrives in the queue*/
    //----------------
    // Initialize variables
