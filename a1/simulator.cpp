@@ -29,7 +29,7 @@ struct Packet
 
 long T;
 long lambdaPerSecond;  // number packets generated per number arrived (packets per second)
-long lambda;
+double lambda;
 long L;      //length
 long C;      // transmission rate of the output link (bits per second)
 long K;      // size of the buffer (number of packets); if not specified, infinite
