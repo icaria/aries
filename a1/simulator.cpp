@@ -12,6 +12,7 @@
 #include <queue>
 #include <sstream>
 #include <cstdlib>
+#include <math.h>
 using namespace std;
 
 extern double genrand();
@@ -28,6 +29,12 @@ queue<packet> packets;
 //===================================================
 // Packet handling methods
 //===================================================
+
+// Arrival is "M" -- memoryless;
+// distribution of time between successive arrivals is identical, 
+// is independent from one inter-arrival to another and is exponentially distributed
+
+// Service process is "D" -- each packet will receive the same constant service time
 
 void Arrival ( long long t ) {
     // Generate a packet as per the exponential distribution 
@@ -83,24 +90,24 @@ void usage( char *argv[] ) {
 
 int main(int argc, char* argv[]) {
     int T;
-	int lamda;  // number packets generated per number arrived (packets per second)
+	int lambda;  // number packets generated per number arrived (packets per second)
     int L;      //length
     int C;      // transmission rate of the output link (bits per second)
     int K;      // size of the buffer (number of packets); if not specified, infinite
     
-    bool isK = false;
+    bool isInfiniteBuffer = true;
 
-    // Order of arguments: T lamda L C K
+    // Order of arguments: T lambda L C K
 	switch(argc) {
 		case 6: // M/D/1/K
             if (!convert(K, argv[5])) 
             {
                 usage(argv);
             }
-            isK = true;
+            isInfiniteBuffer = false;
 		case 5:
             if (!convert(C, argv[4]) || !convert(L, argv[3]) 
-            || !convert(lamda, argv[2]) || !convert(T, argv[1])) {                   
+            || !convert(lambda, argv[2]) || !convert(T, argv[1])) {                   
                usage(argv);
             }
             break;
@@ -113,13 +120,13 @@ int main(int argc, char* argv[]) {
 	}
 
    
-    /*Initialise important terms such as t_arrival = exponential r.v, # of pkts in queue = 0, t_departure = t_arrival ( this implies that first time departure will be called as soon as a packet arrives in the queue*/
-   //----------------
+    //----------------
    // Initialize variables
-	int t_arrival = 0;
-	int t_depart = t_arrival;
+	float u = genrand();
+    int t_arrival = (-1/lambda)*log(u); //exponential random variable
+	int t_depart = t_arrival;  // first time departure will be called as soon as a packet arrives in the queue
     long long ticks = T * 1000000;
-	//int numPackets  // shouldn't need because we can get the size from queue
+	int numPackets = 0;  // shouldn't need because we can get the size from queue ??
   
    
    //----------------
