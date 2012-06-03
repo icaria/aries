@@ -30,7 +30,8 @@ long T;
 long lambdaPerSecond;  // number packets generated per number arrived (packets per second)
 double lambda;
 long L;      //length
-long C;      // transmission rate of the output link (bits per second)
+long CinMegaBits;      // transmission rate of the output link (bits per second)
+long C;
 long K;      // size of the buffer (number of packets); if not specified, infinite
 
 // Global variables
@@ -192,11 +193,12 @@ int main(int argc, char* argv[]) {
             }
             bounded = true;
 		case 5:
-            if (!convert(C, argv[4]) || !convert(L, argv[3]) 
+            if (!convert(CinMegaBits, argv[4]) || !convert(L, argv[3]) 
             || !convert(lambdaPerSecond, argv[2]) || !convert(T, argv[1])) {                   
                usage(argv);
             }
             lambda = ((double)lambdaPerSecond / 1000000); // convert to microseconds
+            C = ((double)CinMegaBits * 1000000); //convert to bits
             
             break;
         case 4:         // three options is invalid
@@ -213,7 +215,6 @@ int main(int argc, char* argv[]) {
 
    
     t_arrival = (unsigned long long)((2 / lambda) * genrand()); //exponential random variable
-    cout << t_arrival << endl;
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = T * 1000;
     idle_ticks = 0;
