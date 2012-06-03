@@ -54,8 +54,7 @@ int remainingServiceTime;
 unsigned long long packetsLost;
 
 unsigned long long totalQueueDelay;
-unsigned long long totalIdleTime;
-unsigned long long totalSojournTime;
+unsigned long long totalSojournTime; // Sum of sojourn times
 unsigned long long totalPacketCount; // Sum of packet counts.
 
 
@@ -105,7 +104,7 @@ int Departure ( long long t ) {
     }
 	else {
 		
-                
+  
         // delete the packet from the queue after an elapse of the deterministic service time
         
         Packet pack = packets.front();
@@ -113,7 +112,7 @@ int Departure ( long long t ) {
         remainingServiceTime = serviceTime;
         t_depart += serviceTime;
         
-        //packets.pop();
+        
         
    		return 1; 
 	}
@@ -121,10 +120,9 @@ int Departure ( long long t ) {
 
 void Start_simulation (long long ticks) {
     
-    long long t = 0;
+    unsigned long long t = 0;
     serviceTime = (int)(L/C);
     remainingServiceTime = 0;
-    
     
     for (t=1; t<= ticks; t++) {
         
@@ -162,9 +160,7 @@ void Compute_performances () {
     double avgQueueDelay = totalQueueDelay / numPackets;
     double avgSojournTime = totalSojournTime / numPackets;
     double totalSojournTime = totalSojournTime;
-    double totalIdleTime = totalIdleTime;
-    double totalTicks = total_ticks;
-    
+        
     /*
     //cout << "-- M/D/1/K --" << endl;
     cout << "t is:" << ticks << endl;
@@ -175,8 +171,7 @@ void Compute_performances () {
     cout << "Total sojourn time: " << totalSojournTime << endl;
     //avg_sojourn_time = (long double)total_sojourn_time / (long double)num_packets;
     cout << "Avg. sojourn time: " << totalSojournTime / numPackets << endl;
-    cout << "Total Idle t: " << totalIdleTime << endl;
-    cout << "Proportion of time idle: " << totalIdleTime / ticks << endl;
+    
     cout << "Probability of packet loss: " << packetsLost / numPackets << endl;
     cout << endl;
     */
