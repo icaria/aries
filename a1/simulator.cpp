@@ -23,7 +23,6 @@ extern void sgenrand(unsigned long seed);
 struct Packet
 {
     unsigned long long arrivalTime;
-    unsigned long long departTime;
 };
 
 // Input parameters
