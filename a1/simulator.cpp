@@ -13,18 +13,36 @@
 #include <sstream>
 #include <cstdlib>
 #include <math.h>
+//#include "RandomForLab1.c"
+
 using namespace std;
 
 extern double genrand();
 extern void sgenrand(unsigned long seed);
 
-struct packet
+struct Packet
 {
     long long arrivalTime;
 };
 
+// Input parameters
+
+int T;
+int lambda;  // number packets generated per number arrived (packets per second)
+int L;      //length
+int C;      // transmission rate of the output link (bits per second)
+int K;      // size of the buffer (number of packets); if not specified, infinite
+
 // Global variables
-queue<packet> packets;
+
+queue<Packet> packets;
+
+long long t_arrival;
+long long t_depart;
+long long ticks;
+bool bounded;
+int numPackets;
+int packetLoss;
 
 //===================================================
 // Packet handling methods
@@ -40,6 +58,23 @@ void Arrival ( long long t ) {
     // Generate a packet as per the exponential distribution 
 	// insert the packet in the queue (an array or a linked list)*/ 
 	//queue.push(packet);
+    
+    numPackets++;
+    
+    if( bounded ) {
+        if( packets.size() < K ) {
+            Packet pack; 
+            pack.arrivalTime = t;
+            packets.push( pack );
+        } else {
+            packetLoss++;
+        }
+    } else {
+        Packet pack;
+        pack.arrivalTime = t;
+        packets.push( pack );
+    }
+    
 }
 
 int Departure ( long long t ) {
@@ -50,6 +85,9 @@ int Departure ( long long t ) {
     }
 	else {
 		// delete the packet from the queue after an elapse of the deterministic service time
+        
+        Packet pack = packets.front();
+        
 		int deleted_packet = 0;
    		return deleted_packet; 
 	}
@@ -83,19 +121,13 @@ bool convert( int &val, char *buffer ) {
 
 // Helper method for input parameters
 void usage( char *argv[] ) {
-    cerr << "Usage: " << argv[0]
-	 << " T  lamda  L  C  K (optional)" << endl;
+    cerr << "Usage: " << argv[0] << " T  lamda  L  C  K (optional)" << endl;
     exit( EXIT_FAILURE );				// TERMINATE
 }
 
 int main(int argc, char* argv[]) {
-    int T;
-	int lambda;  // number packets generated per number arrived (packets per second)
-    int L;      //length
-    int C;      // transmission rate of the output link (bits per second)
-    int K;      // size of the buffer (number of packets); if not specified, infinite
-    
-    bool isInfiniteBuffer = true;
+        
+    bounded = false;
 
     // Order of arguments: T lambda L C K
 	switch(argc) {
@@ -104,7 +136,7 @@ int main(int argc, char* argv[]) {
             {
                 usage(argv);
             }
-            isInfiniteBuffer = false;
+            bounded = true;
 		case 5:
             if (!convert(C, argv[4]) || !convert(L, argv[3]) 
             || !convert(lambda, argv[2]) || !convert(T, argv[1])) {                   
@@ -123,10 +155,10 @@ int main(int argc, char* argv[]) {
     //----------------
    // Initialize variables
 	float u = genrand();
-    int t_arrival = (-1/lambda)*log(u); //exponential random variable
-	int t_depart = t_arrival;  // first time departure will be called as soon as a packet arrives in the queue
-    long long ticks = T * 1000000;
-	int numPackets = 0;  // shouldn't need because we can get the size from queue ??
+    t_arrival = (-1/lambda)*log(u); //exponential random variable
+	t_depart = t_arrival;  // first time departure will be called as soon as a packet arrives in the queue
+    ticks = T * 1000000;
+	numPackets = 0;  // shouldn't need because we can get the size from queue ??
   
    
    //----------------
