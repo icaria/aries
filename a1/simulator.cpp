@@ -146,10 +146,10 @@ void Compute_performances () {
     double avgSojournTime = totalSojournTime / numPackets;
     
     if( bounded ) {
-        cout << totalPacketCount << "," << totalSojournTime << "," << probLoss << "," << propIdle << ",";
+        cout << totalPacketCount << "," << totalSojournTime << "," << probLoss << "," << propIdle  << "," << endl;
     }
     else {
-        cout << avgPacketsInQueue << "," << avgSojournTime << "," << propIdle << ",";
+        cout << avgPacketsInQueue << "," << avgSojournTime << "," << propIdle << "," << endl;
     }
     
 //    cout << "t is: " << ticks << endl;
