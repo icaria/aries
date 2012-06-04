@@ -19,6 +19,7 @@ using namespace std;
 extern double genrand();
 extern void sgenrand(unsigned long seed);
 
+// Struct to simulate a packet.
 struct Packet
 {
     unsigned long long arrivalTime;
@@ -26,7 +27,7 @@ struct Packet
 
 // Input parameters
 
-long T;
+long T; //
 long lambdaPerSecond;  // number packets generated per number arrived (packets per second)
 double lambda;
 long L;      //length
@@ -44,7 +45,6 @@ unsigned long long t_depart;
 // Ticks
 unsigned long long ticks;
 unsigned long long idle_ticks;
-unsigned long long total_ticks;
 
 bool bounded;
 int numPackets;
@@ -140,12 +140,12 @@ void Start_simulation (long long ticks) {
 void Compute_performances () {
     /*Calculate and display the results such as average number of packets in queue, average delay in queue and idle time for the server. */
     
-    double propIdle = idle_ticks / total_ticks;
-    double probLoss = packetsLost / numPackets;
-    double avgPacketsInQueue = totalPacketCount / total_ticks;
+    double propIdle = idle_ticks / ticks;
+    double probLoss = ((double)packetsLost / (double)numPackets) * 100;
+    double avgPacketsInQueue = totalPacketCount / ticks;
     double avgQueueDelay = totalQueueDelay / numPackets;
     double avgSojournTime = totalSojournTime / numPackets;
-
+    
     if( bounded ) {
         cout << totalPacketCount << "," << totalSojournTime << "," << probLoss << "," << propIdle << endl;
     }
