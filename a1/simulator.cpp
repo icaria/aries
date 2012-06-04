@@ -65,7 +65,7 @@ unsigned long long totalPacketCount; // Sum of packet counts.
 void UpdateArrivalTime()
 {
     double u = genrand();
-    t_arrival = (unsigned long long)(((2 / lambda) * u) + 1);
+    t_arrival += (unsigned long long)(((2 / lambda) * u) + 1);
 }
 
 void Arrival ( long long t ) {
@@ -75,7 +75,7 @@ void Arrival ( long long t ) {
     
     numPackets++;
     UpdateArrivalTime();
-    
+
     if (bounded && packets.size() == K) {
         packetsLost++;
     }
@@ -88,7 +88,7 @@ void Arrival ( long long t ) {
 
 int Departure ( long long t ) {
 	// If the head of the queue is empty/the queue is empty
-    if(packets.empty()) {
+    if(packets.size() == 0) {
         remainingServiceTime = 0;
         t_depart++;
         idle_ticks ++;
@@ -107,7 +107,7 @@ int Departure ( long long t ) {
 void Start_simulation (long long ticks) {
     
     unsigned long long t = 0;
-    serviceTime = (int)(L/C);
+    serviceTime = (int)(((double)L/(double)C) * 1000000);
     remainingServiceTime = 0;
     
     for (t=1; t<= ticks; t++) {
@@ -116,14 +116,14 @@ void Start_simulation (long long ticks) {
         if (t == t_arrival) {
             Arrival(t);
         }
-        else if (t == t_depart) {
+        
+        if (t == t_depart) {
             Departure(t);
         }
         
         if ( remainingServiceTime > 0 ) {
-            
             remainingServiceTime--;
-            t_depart++;
+            //t_depart++;
              
             if( remainingServiceTime == 0 ) {
                 Packet pack = packets.front();
@@ -145,19 +145,19 @@ void Compute_performances () {
     double avgPacketsInQueue = totalPacketCount / total_ticks;
     double avgQueueDelay = totalQueueDelay / numPackets;
     double avgSojournTime = totalSojournTime / numPackets;
-    double totalSojournTime = totalSojournTime;
 
     
     cout << "t is: " << ticks << endl;
-    cout << "numpackets" << numPackets << endl;
+    cout << "numPackets: " << numPackets << endl;
     cout << "Avg. packets in queue: " << totalPacketCount / ticks << endl;
-    
+
     cout << "Avg. queue delay: " << totalQueueDelay / numPackets << endl;
     cout << "Total sojourn time: " << totalSojournTime << endl;
     
     cout << "Avg. sojourn time: " << totalSojournTime / numPackets << endl;
     
-    cout << "Probability of packet loss: " << packetsLost / numPackets << endl;
+    
+    cout << "Probability of packet loss: " << ((double)packetsLost / (double)numPackets) * 100 << endl;
     cout << endl;
 }
 
@@ -216,7 +216,7 @@ int main(int argc, char* argv[]) {
    
     t_arrival = (unsigned long long)((2 / lambda) * genrand()); //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
-    ticks = T * 1000;
+    ticks = T * 1000000;
     idle_ticks = 0;
 	numPackets = 0;  // shouldn't need because we can get the size from queue ??
     totalQueueDelay = 0;
