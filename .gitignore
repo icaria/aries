@@ -12,3 +12,4 @@
 *.a
 
 a.out
+.DS_Store
