@@ -1,11 +1,27 @@
 import subprocess;
 
+
 step = 0.05;
 min = 0.2;
 max = 0.95;
 L = 2000
 C = 1
 T = 5000
+lam = 100
+
+#------------------Question 3
+print "---------------------------Q3"
+subprocess.call(['./a.out', str(T), str(lam), str(L), str(C)])    
+print ""
+subprocess.call(["./a.out", str(T), str(100), str(L), str(C), str(5) ])    
+print ""
+'''
+#------------------Question 6
+print "---------------------------Q6"
+p = 1.2;
+lam = int( p * C *(1000000/ L));
+subprocess.call(["./a.out", str(T), str(100), str(L), str(C) ])    
+print ""
 
 #-------------------Question 4 values
 print "---------------------------Q4"
@@ -61,3 +77,4 @@ for K in list:
         subprocess.call(["./a.out", str(T), str(lam), str(L), str(C), str(K) ])    
         p += step
         print ""
+'''

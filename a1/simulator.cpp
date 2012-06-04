@@ -75,8 +75,9 @@ void Arrival ( long long t ) {
     
     numPackets++;
     UpdateArrivalTime();
-
-    if (bounded && packets.size() == K) {
+    cout << "size: " << packets.size() << endl;
+    if (bounded && (long)packets.size() == K) {
+        cout << "packets lost" << endl;
         packetsLost++;
     }
     else {
@@ -139,18 +140,20 @@ void Start_simulation (long long ticks) {
 
 void Compute_performances () {
        
-    double propIdle = idle_ticks / ticks;
-    double probLoss = ((double)packetsLost / (double)numPackets) * 100;
-    double avgPacketsInQueue = totalPacketCount / ticks;
-    double avgQueueDelay = totalQueueDelay / numPackets;
-    double avgSojournTime = totalSojournTime / numPackets;
+    double propIdle = (long double)idle_ticks / ticks;
+    double probLoss = (long double)packetsLost / numPackets ;
+    double avgPacketsInQueue = (long double)totalPacketCount / ticks;
+    double avgQueueDelay = (long double)totalQueueDelay / numPackets;
+    double avgSojournTime = (long double)totalSojournTime / numPackets;
     
+     cout << packetsLost << endl;
+     cout << numPackets << endl;
     if( bounded ) {
-        cout << totalPacketCount << "," << totalSojournTime << "," << probLoss << "," << propIdle << ",";
+        cout << totalPacketCount << "," << totalSojournTime << "," << probLoss << "," << propIdle << "," ;
     }
-    else {
-        cout << avgPacketsInQueue << "," << avgSojournTime << "," << propIdle << ",";
-    }
+    //else {    
+       // cout << avgPacketsInQueue << "," << avgSojournTime << "," << propIdle << "," ;
+    //}
     
 //    cout << "t is: " << ticks << endl;
 //    cout << "numPackets: " << numPackets << endl;
@@ -196,6 +199,7 @@ int main(int argc, char* argv[]) {
             {
                 usage(argv);
             }
+            cout << K << endl;
             bounded = true;
 		case 5:
             if (!convert(CinMegaBits, argv[4]) || !convert(L, argv[3]) 
@@ -220,14 +224,14 @@ int main(int argc, char* argv[]) {
 
     t_arrival = (unsigned long long)((2 / lambda) * genrand()); //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
-    ticks = T * 1000000;
+    ticks = ((unsigned long long)T * 1000000);
     idle_ticks = 0;
 	numPackets = 0; 
+    packetsLost = 0;
     totalQueueDelay = 0;
     totalSojournTime = 0;
     totalPacketCount = 0;
   
-   
    //----------------
    // Start simulation
     
