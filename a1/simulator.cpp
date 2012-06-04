@@ -4,7 +4,7 @@
 //  Created by Stephen Chen and Gabriella Grandilli on 12-05-29.
 //
 //  To compile and run:
-//  g++ simulator.cpp
+//  make
 //  ./a.out T lamda L C K
 //===================================================
 
@@ -138,8 +138,7 @@ void Start_simulation (long long ticks) {
 }
 
 void Compute_performances () {
-    /*Calculate and display the results such as average number of packets in queue, average delay in queue and idle time for the server. */
-    
+       
     double propIdle = idle_ticks / ticks;
     double probLoss = ((double)packetsLost / (double)numPackets) * 100;
     double avgPacketsInQueue = totalPacketCount / ticks;
@@ -147,10 +146,10 @@ void Compute_performances () {
     double avgSojournTime = totalSojournTime / numPackets;
     
     if( bounded ) {
-        cout << totalPacketCount << "," << totalSojournTime << "," << probLoss << "," << propIdle << endl;
+        cout << totalPacketCount << "," << totalSojournTime << "," << probLoss << "," << propIdle << ",";
     }
     else {
-        cout << avgPacketsInQueue << "," << avgSojournTime << "," << propIdle << endl;
+        cout << avgPacketsInQueue << "," << avgSojournTime << "," << propIdle << ",";
     }
     
 //    cout << "t is: " << ticks << endl;
@@ -223,7 +222,7 @@ int main(int argc, char* argv[]) {
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = T * 1000000;
     idle_ticks = 0;
-	numPackets = 0;  // shouldn't need because we can get the size from queue ??
+	numPackets = 0; 
     totalQueueDelay = 0;
     totalSojournTime = 0;
     totalPacketCount = 0;
