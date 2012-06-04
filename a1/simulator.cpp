@@ -213,7 +213,7 @@ int main(int argc, char* argv[]) {
     //----------------
    // Initialize variables
 
-   
+   cout << "lamdba " << lambda << endl;
     t_arrival = (unsigned long long)((2 / lambda) * genrand()); //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = T * 1000000;
