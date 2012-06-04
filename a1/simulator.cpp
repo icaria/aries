@@ -81,7 +81,7 @@ void Arrival ( long long t ) {
     }
     else {
         Packet pack;
-        pack.arrivalTime = t_arrival;
+        pack.arrivalTime = t;
         packets.push( pack );
     }
 }
@@ -127,7 +127,7 @@ void Start_simulation (long long ticks) {
              
             if( remainingServiceTime == 0 ) {
                 Packet pack = packets.front();
-                totalSojournTime += t - pack.arrivalTime;
+                totalSojournTime += (t - pack.arrivalTime);
                 packets.pop();
                 
             }
@@ -147,18 +147,18 @@ void Compute_performances () {
     double avgSojournTime = totalSojournTime / numPackets;
 
     
-    cout << "t is: " << ticks << endl;
-    cout << "numPackets: " << numPackets << endl;
-    cout << "Avg. packets in queue: " << totalPacketCount / ticks << endl;
-
-    cout << "Avg. queue delay: " << totalQueueDelay / numPackets << endl;
-    cout << "Total sojourn time: " << totalSojournTime << endl;
-    
-    cout << "Avg. sojourn time: " << totalSojournTime / numPackets << endl;
-    
-    
-    cout << "Probability of packet loss: " << ((double)packetsLost / (double)numPackets) * 100 << endl;
-    cout << endl;
+//    cout << "t is: " << ticks << endl;
+//    cout << "numPackets: " << numPackets << endl;
+//    cout << "Avg. packets in queue: " << totalPacketCount / ticks << endl;
+//
+//    cout << "Avg. queue delay: " << totalQueueDelay / numPackets << endl;
+//    cout << "Total sojourn time: " << totalSojournTime << endl;
+//    
+//    cout << "Avg. sojourn time: " << totalSojournTime / numPackets << endl;
+//    
+//    
+//    cout << "Probability of packet loss: " << ((double)packetsLost / (double)numPackets) * 100 << endl;
+//    cout << endl;
 }
 
 //========================================================
@@ -213,7 +213,6 @@ int main(int argc, char* argv[]) {
     //----------------
    // Initialize variables
 
-   cout << "lamdba " << lambda << endl;
     t_arrival = (unsigned long long)((2 / lambda) * genrand()); //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = T * 1000000;
