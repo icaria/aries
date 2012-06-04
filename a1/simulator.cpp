@@ -31,7 +31,7 @@ long lambdaPerSecond;  // number packets generated per number arrived (packets p
 double lambda;
 long L;      //length
 long CinMegaBits;      // transmission rate of the output link (bits per second)
-long C;
+double C;
 long K;      // size of the buffer (number of packets); if not specified, infinite
 
 // Global variables
