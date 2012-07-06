@@ -11,16 +11,18 @@ lam = 100
 
 #------------------Question 3
 print "---------------------------Q3"
-subprocess.call(['./a.out', str(T), str(lam), str(L), str(C)])    
-print ""
-subprocess.call(["./a.out", str(T), str(100), str(L), str(C), str(5) ])    
-print ""
-'''
+
+i = 0
+while i < 5:
+    subprocess.call(['./a.out', str(T), str(lam), str(L), str(C)])    
+    print ""
+    i += 1
+
 #------------------Question 6
 print "---------------------------Q6"
 p = 1.2;
 lam = int( p * C *(1000000/ L));
-subprocess.call(["./a.out", str(T), str(100), str(L), str(C) ])    
+subprocess.call(["./a.out", str(T), str(lam), str(L), str(C) ])    
 print ""
 
 #-------------------Question 4 values
@@ -77,4 +79,4 @@ for K in list:
         subprocess.call(["./a.out", str(T), str(lam), str(L), str(C), str(K) ])    
         p += step
         print ""
-'''
+

@@ -6,6 +6,11 @@
 //  To compile and run:
 //  make
 //  ./a.out T lamda L C K
+//  T = number to be multiplied by 10^6
+//  lamda is in seconds
+//  L is in bits
+//  C is in Mbits/sec
+//  K is size of queue in packets; is an optional parameter
 //===================================================
 
 #include <iostream>
@@ -71,13 +76,11 @@ void UpdateArrivalTime()
 void Arrival ( long long t ) {
     // Generate a packet as per the exponential distribution 
 	// insert the packet in the queue (an array or a linked list)*/ 
-	//queue.push(packet);
-    
+	    
     numPackets++;
     UpdateArrivalTime();
-    cout << "size: " << packets.size() << endl;
+    
     if (bounded && (long)packets.size() == K) {
-        cout << "packets lost" << endl;
         packetsLost++;
     }
     else {
@@ -108,7 +111,7 @@ int Departure ( long long t ) {
 void Start_simulation (long long ticks) {
     
     unsigned long long t = 0;
-    serviceTime = (int)(((double)L/(double)C) * 1000000);
+    serviceTime = (int)(((double)L/(double)C));
     remainingServiceTime = 0;
     
     for (t=1; t<= ticks; t++) {
@@ -124,7 +127,6 @@ void Start_simulation (long long ticks) {
         
         if ( remainingServiceTime > 0 ) {
             remainingServiceTime--;
-            //t_depart++;
              
             if( remainingServiceTime == 0 ) {
                 Packet pack = packets.front();
@@ -134,39 +136,39 @@ void Start_simulation (long long ticks) {
             }
         }
         
-        totalPacketCount += numPackets;
+        totalPacketCount += packets.size();
     }
 }
 
 void Compute_performances () {
        
-    double propIdle = (long double)idle_ticks / ticks;
-    double probLoss = (long double)packetsLost / numPackets ;
+    double propIdle = ((long double)idle_ticks / ticks) * 100;
+    double probLoss = ((long double)packetsLost / numPackets) * 100 ;
     double avgPacketsInQueue = (long double)totalPacketCount / ticks;
     double avgQueueDelay = (long double)totalQueueDelay / numPackets;
     double avgSojournTime = (long double)totalSojournTime / numPackets;
     
-     cout << packetsLost << endl;
-     cout << numPackets << endl;
+// Scripting output
+   
     if( bounded ) {
         cout << totalPacketCount << "," << totalSojournTime << "," << probLoss << "," << propIdle << "," ;
     }
-    //else {    
-       // cout << avgPacketsInQueue << "," << avgSojournTime << "," << propIdle << "," ;
-    //}
-    
-//    cout << "t is: " << ticks << endl;
-//    cout << "numPackets: " << numPackets << endl;
-//    cout << "Avg. packets in queue: " << totalPacketCount / ticks << endl;
-//
-//    cout << "Avg. queue delay: " << totalQueueDelay / numPackets << endl;
-//    cout << "Total sojourn time: " << totalSojournTime << endl;
-//    
-//    cout << "Avg. sojourn time: " << totalSojournTime / numPackets << endl;
-//    
-//    
-//    cout << "Probability of packet loss: " << ((double)packetsLost / (double)numPackets) * 100 << endl;
-//    cout << endl;
+    else {    
+        cout << avgPacketsInQueue << "," << avgSojournTime << "," << propIdle << "," ;
+    }
+
+  /*  
+    cout << "Number of ticks is: " << ticks << endl;
+    cout << "Number of packets: " << numPackets << endl;
+    cout << "N (sum of number of packets): " << totalPacketCount << endl;
+    cout << "E[N] (Avg. number of packets in queue): " << avgPacketsInQueue << endl;
+
+    cout << "T (total sojourn times): " << totalSojournTime << endl;
+    cout << "E[T] (Avg. sojourn time): " << avgSojournTime << endl;
+
+    cout << "Ploss (Probability of packet loss): " << probLoss << " %" << endl;
+    cout << "Pidle (Proportion of idle time): " << propIdle << " %" << endl;
+    */
 }
 
 //========================================================
@@ -199,7 +201,6 @@ int main(int argc, char* argv[]) {
             {
                 usage(argv);
             }
-            cout << K << endl;
             bounded = true;
 		case 5:
             if (!convert(CinMegaBits, argv[4]) || !convert(L, argv[3]) 
@@ -207,7 +208,7 @@ int main(int argc, char* argv[]) {
                usage(argv);
             }
             lambda = ((double)lambdaPerSecond / 1000000); // convert to microseconds
-            C = ((double)CinMegaBits * 1000000); //convert to bits
+            C = ((double)CinMegaBits ); //convert to bits per microseconds
             
             break;
         case 4:         // three options is invalid
@@ -221,7 +222,7 @@ int main(int argc, char* argv[]) {
    
     //----------------
    // Initialize variables
-
+    sgenrand(time(NULL)); // init random seed
     t_arrival = (unsigned long long)((2 / lambda) * genrand()); //exponential random variable
 	t_depart = 1;  // first time departure will be called as soon as a packet arrives in the queue
     ticks = ((unsigned long long)T * 1000000);
