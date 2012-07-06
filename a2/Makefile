@@ -28,4 +28,4 @@ ${EXEC} : ${OBJECTS}				# link step
 	${CXX} $^ -c -o $@
     
 clean :						# remove files that can be regenerated
-	rm -f lab2.o ${EXEC}
+	rm -f lab2.o layer2.txt layer3.txt ${EXEC}
