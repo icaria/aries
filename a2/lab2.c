@@ -23,7 +23,7 @@ void Sender(Event Current_Event) {
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     } else if(Current_Event.Type == RECEIVE_ACK) {
         printf("RECEIVED ACK\n");
-        
+        Dequeue(Current_Event);
     } else if(Current_Event.Type == TIMEOUT) {
         //printf("TIME_OUT Packet Number:%d", Current_Event.Pkt_Num);
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
