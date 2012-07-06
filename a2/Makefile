@@ -9,7 +9,7 @@
 
 CXX = g++					# compiler
 #CXXFLAGS = -g -Wall -MMD			# compiler flags
-#CXXFLAGS = -O3
+CXXFLAGS = -O3
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
 #OBJECTS = lab2linux.o lab2.o 			# object files forming executable
