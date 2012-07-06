@@ -16,14 +16,14 @@ void Sender(Event Current_Event) {
 	
 	/* You sender code here */
     
-    printf(Current_Event.Time);
+    //printf(Current_Event.Time);
     
     if(Current_Event.Type == START_SEND) {
         printf("START_SEND Packet Number:%d", Current_Event.Pkt_Num);
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     } else if(Current_Event.Type == RECEIVE_ACK) {
         
-    } else if(Current_Event.Type == TIME_OUT) {
+    } else if(Current_Event.Type == TIMEOUT) {
         printf("TIME_OUT Packet Number:%d", Current_Event.Pkt_Num);
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     }
@@ -49,10 +49,10 @@ int main()
 	C = 1000000;			/* bps */
 	L = 1500*8;			/* bits, Avg length of pkts */
 	A = 54*8;			/* bits */
-	Prop_Delay = 50;		/* seconds */
+	Prop_Delay = 0.05;		/* seconds */
 	Window_Size = 5;
 	FER = 0.01;
-	Time_Out = 1;
+	Time_Out = 10;
 	/**********************************************/
 	
 	Initialization();
