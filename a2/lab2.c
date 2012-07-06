@@ -19,7 +19,7 @@ void Sender(Event Current_Event) {
     //printf(Current_Event.Time);
     
     if(Current_Event.Type == START_SEND) {
-        //printf("START_SEND Packet Number:%d", Current_Event.Pkt_Num);
+        printf("START_SEND Packet Number:%d", Current_Event.Pkt_Num);
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     } else if(Current_Event.Type == RECEIVE_ACK) {
         printf("RECEIVED ACK");
