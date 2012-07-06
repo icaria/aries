@@ -12,7 +12,8 @@ CXX = g++					# compiler
 #CXXFLAGS = -O3
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-OBJECTS = lab2linux.o lab2.o 			# object files forming executable
+#OBJECTS = lab2linux.o lab2.o 			# object files forming executable
+OBJECTS = lab2.o
 
 EXEC = a.out					# executable name
 
@@ -21,10 +22,10 @@ EXEC = a.out					# executable name
 .PHONY : clean					# not file names
 
 ${EXEC} : ${OBJECTS}				# link step
-	${CXX} $^ -o $@				# additional object files before $^
+	${CXX} $^ -o $@			# additional object files before $^
 
 %.o : %.cc
-	${CXX} $^ -c -o $@
+	${CXX} $^ -m32 -c -o $@
     
 clean :						# remove files that can be regenerated
-	rm -f ${OBJECTS} ${EXEC}
+	rm -f lab2.o ${EXEC}

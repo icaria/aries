@@ -29,7 +29,6 @@ typedef struct
 	int Error;
 }Event;
 
-
 void Initialization();
 void Dequeue(Event *Current_Event);
 void Channel(int Type, int SeqNum, int PktNum, double CTime);

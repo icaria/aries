@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "lab2.h"
 
+// Global Variables
+
 struct Queue *Queue_Head = NULL;
 double C;
 double A;
@@ -12,9 +14,31 @@ double FER;
 int Window_Size;
 int N; /* Total number of packets */
 
+//===============================================
+// Helper Methods
+
+void Initialization() {
+
+}
+
+void Print(Event e) {
+
+}
+
+void Dequeue(Event* Current_Event) {
+
+}
+
+void Channel(int Type, int SeqNum, int PktNum, double CTime) {
+
+}
+
+//===============================================
+// Sender/Receiver Methods
+
 void Sender(Event Current_Event) {
 	
-	/* You sender code here */
+	/* Your sender code here */
 }
 
 void Receiver(Event Current_Event) {
@@ -22,6 +46,9 @@ void Receiver(Event Current_Event) {
 	/* Your receiver code here */
 }
 
+
+//===============================================
+// Main
 
 int main()
 {
