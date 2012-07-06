@@ -19,10 +19,11 @@ void Sender(Event Current_Event) {
     //printf(Current_Event.Time);
     
     if(Current_Event.Type == START_SEND) {
-        printf("START_SEND Packet Number:%d", Current_Event.Pkt_Num);
+        printf("START_SEND Packet Number:%d\n", Current_Event.Pkt_Num);
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     } else if(Current_Event.Type == RECEIVE_ACK) {
-        printf("RECEIVED ACK");
+        printf("RECEIVED ACK\n");
+        
     } else if(Current_Event.Type == TIMEOUT) {
         //printf("TIME_OUT Packet Number:%d", Current_Event.Pkt_Num);
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
@@ -34,6 +35,7 @@ void Receiver(Event Current_Event) {
 	/* Your receiver code here */
     
     Deliver(Current_Event, Current_Event.Time);
+    printf("SEND_ACK Packet Number:%d\n", Current_Event.Pkt_Num);
     Channel(SEND_ACK, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
 }
 
