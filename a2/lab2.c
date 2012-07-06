@@ -19,6 +19,12 @@ void Sender(Event Current_Event) {
     printf(Current_Event.Time);
     
     if(Current_Event.Type == START_SEND) {
+        printf("START_SEND Packet Number:%d", Current_Event.Pkt_Num);
+        Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
+    } else if(Current_Event.Type == RECEIVE_ACK) {
+        
+    } else if(Current_Event.Type == TIME_OUT) {
+        printf("TIME_OUT Packet Number:%d", Current_Event.Pkt_Num);
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     }
 }
@@ -26,6 +32,8 @@ void Sender(Event Current_Event) {
 void Receiver(Event Current_Event) {
 	
 	/* Your receiver code here */
+    
+    Deliver(Current_Event, Current_Event.Time);
     Channel(SEND_ACK, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
 }
 
@@ -44,7 +52,7 @@ int main()
 	Prop_Delay = 50;		/* seconds */
 	Window_Size = 5;
 	FER = 0.01;
-	Time_Out = 10;
+	Time_Out = 1;
 	/**********************************************/
 	
 	Initialization();
