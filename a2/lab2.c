@@ -15,11 +15,18 @@ int N; /* Total number of packets */
 void Sender(Event Current_Event) {
 	
 	/* You sender code here */
+    
+    printf(Current_Event.Time);
+    
+    if(Current_Event.Type == START_SEND) {
+        Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
+    }
 }
 
 void Receiver(Event Current_Event) {
 	
 	/* Your receiver code here */
+    Channel(SEND_ACK, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
 }
 
 
