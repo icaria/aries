@@ -12,16 +12,43 @@ double FER;
 int Window_Size;
 int N; /* Total number of packets */
 
+<<<<<<< HEAD:a2/lab2.c
 void Sender(Event Current_Event) {
 	
 	/* You sender code here */
+=======
+//===============================================
+// Sender/Receiver Methods
+
+void Sender(Event Current_Event) {
+	
+	/* Your sender code here 
+    
+    if(Current_Event.Type == START_SEND) {
+
+        //Current_Event.Time = 
+        Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
+        Queue_Head->Type = RECEIVE_FRAME;
+    
+        if(Counter == 0) {
+            Queue_Head->Type = TIMEOUT;
+        } else if(Queue_Head->Type == SEND_ACK) {
+            Queue_Head->Type = RECEIVE_ACK;
+        } 
+    } else if (Current_Event.Type == RECEIVE_ACK) {
+        Queue_Head = Queue_Head->Next;
+    }*/
+>>>>>>> b1bd75bb69fd790bad923e2de07ffa36f061535d:a2/lab2.cc
 }
 
 void Receiver(Event Current_Event) {
 	
-	/* Your receiver code here */
-}
+	/* Your receiver code here 
 
+    Current_Event.Type = SEND_ACK;
+    Queue_Head = *Current_Event;*/
+    
+}
 
 int main()
 {
@@ -34,7 +61,7 @@ int main()
 	C = 1000000;			/* bps */
 	L = 1500*8;			/* bits, Avg length of pkts */
 	A = 54*8;			/* bits */
-	Prop_Delay = 50;		/* seconds */
+	Prop_Delay = 0.05;		/* seconds */
 	Window_Size = 5;
 	FER = 0.01;
 	Time_Out = 10;
