@@ -15,17 +15,14 @@ int N; /* Total number of packets */
 void Sender(Event Current_Event) {
 	
 	/* You sender code here */
-    
-    //printf(Current_Event.Time);
-    
-    if(Current_Event.Type == START_SEND) {
-        printf("START_SEND Packet Number:%d\n", Current_Event.Pkt_Num);
+
+    if(Current_Event.Type == START_SEND || Current_Event.Type == TIMEOUT) {
+        //printf("START_SEND Packet Number:%d\n", Current_Event.Pkt_Num);
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     } else if(Current_Event.Type == RECEIVE_ACK) {
-        printf("RECEIVED ACK\n");
-        Dequeue(Current_Event);
-    } else if(Current_Event.Type == TIMEOUT) {
-        //printf("TIME_OUT Packet Number:%d", Current_Event.Pkt_Num);
+        //printf("RECEIVED ACK\n");
+        Current_Event.Seq_Num = (Current_Event.Seq_Num + 1) % 2;
+        Current_Event.Pkt_Num = Current_Event.Pkt_Num + 1;
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     }
 }
@@ -35,7 +32,7 @@ void Receiver(Event Current_Event) {
 	/* Your receiver code here */
     
     Deliver(Current_Event, Current_Event.Time);
-    printf("SEND_ACK Packet Number:%d\n", Current_Event.Pkt_Num);
+    //printf("SEND_ACK Packet Number:%d\n", Current_Event.Pkt_Num);
     Channel(SEND_ACK, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
 }
 
@@ -52,7 +49,7 @@ int main()
 	L = 1500*8;			/* bits, Avg length of pkts */
 	A = 54*8;			/* bits */
 	Prop_Delay = 0.05;		/* seconds */
-	Window_Size = 5;
+	Window_Size = 1;
 	FER = 0.01;
 	Time_Out = 10;
 	/**********************************************/
