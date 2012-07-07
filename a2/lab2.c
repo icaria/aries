@@ -33,7 +33,7 @@ void Receiver(Event Current_Event) {
     
     Deliver(Current_Event, Current_Event.Time);
     //printf("SEND_ACK Packet Number:%d\n", Current_Event.Pkt_Num);
-    Channel(SEND_ACK, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
+    Channel(SEND_ACK, Current_Event.Seq_Num, 0, Current_Event.Time);
 }
 
 
