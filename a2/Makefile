@@ -24,7 +24,7 @@ EXEC = a.out					# executable name
 ${EXEC} : ${OBJECTS}				# link step
 	${CXX} $^ -o $@			# additional object files before $^
 
-%.o : %.cc
+%.o : %.c
 	${CXX} $^ -c -o $@
     
 clean :						# remove files that can be regenerated
