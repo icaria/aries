@@ -73,6 +73,7 @@ int main()
 			Print(Current_Event);
 			Receiver(Current_Event);
 		}*/
+        Print(Current_Event);
         Sender(Current_Event);
 	}
 	
