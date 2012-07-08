@@ -17,11 +17,13 @@ void Sender(Event Current_Event) {
 	/* You sender code here */
 
     if(Current_Event.Error == 0) {
-        if(Current_Event.Type == START_SEND || Current_Event.Type == TIMEOUT) {
+        if(Current_Event.Type == START_SEND) {
+            Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
+        } else if(Current_Event.Type == TIMEOUT) {
+            Dequeue(&Current_Event);
             Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == RECEIVE_ACK) {
             Dequeue(&Current_Event);
-            prinf("Next Event Type: %d", Current.Type);
             Current_Event.Seq_Num = (Current_Event.Seq_Num + 1) % 2;
             Current_Event.Pkt_Num = Current_Event.Pkt_Num + 1;
             
