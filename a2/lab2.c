@@ -18,10 +18,8 @@ void Sender(Event Current_Event) {
 
     if(Current_Event.Error == 0) {
         if(Current_Event.Type == START_SEND || Current_Event.Type == TIMEOUT) {
-            //printf("START_SEND Packet Number:%d\n", Current_Event.Pkt_Num);
             Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == RECEIVE_ACK) {
-            //printf("RECEIVED ACK\n");
             Dequeue(&Current_Event);
             Current_Event.Seq_Num = (Current_Event.Seq_Num + 1) % 2;
             Current_Event.Pkt_Num = Current_Event.Pkt_Num + 1;
@@ -38,9 +36,11 @@ void Receiver(Event Current_Event) {
 	/* Your receiver code here */
     
     if(Current_Event.Error == 0) {
-        Deliver(Current_Event, Current_Event.Time);
-        //printf("SEND_ACK Packet Number:%d\n", Current_Event.Pkt_Num);
-        Channel(SEND_ACK, Current_Event.Seq_Num, 0, Current_Event.Time);
+        
+        if(Current_Event.Seq_Num == EXT_EXPECTED_FRAME) {
+            Deliver(Current_Event, Current_Event.Time);
+            Channel(SEND_ACK, Current_Event.Seq_Num, 0, Current_Event.Time);
+        }
     }
 }
 
