@@ -52,14 +52,14 @@ int main()
 	/**********************************************/
 	/* Remember to change the following variables */
 	
-	N = 25;		
+	N = 10000;		
 	C = 1000000;			/* bps */
 	L = 1500*8;			/* bits, Avg length of pkts */
 	A = 54*8;			/* bits */
 	Prop_Delay = 0.05;		/* seconds */
 	Window_Size = 1;
 	FER = 0.01;
-	Time_Out = 10;
+	Time_Out = (L / C) + (A / C) + (2 * Prop_Delay);
 	/**********************************************/
 	
 	Initialization();
