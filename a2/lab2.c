@@ -17,25 +17,22 @@ void Sender(Event Current_Event) {
 	/* You sender code here */
 
     if(Current_Event.Error == 0) {
-        
-        printf("Current Event: Type:%d, Seq_Num:%d, Pkt_Num:%d \n", Current_Event.Type, Current_Event.Seq_Num, Current_Event.Pkt_Num);
-        
         if(Current_Event.Type == START_SEND) {
             Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == TIMEOUT) {
             Dequeue(&Current_Event);
             Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == RECEIVE_ACK) {
-            Dequeue(&Current_Event);
-            Current_Event.Seq_Num = (Current_Event.Seq_Num + 1) % 2;
-            Current_Event.Pkt_Num = Current_Event.Pkt_Num + 1;
+
+            //if(Current_Event.Type == TIMEOUT) {
+                Current_Event.Seq_Num = (Queue_Head.Seq_Num + 1) % 2;
+                Current_Event.Pkt_Num = Queue_Head.Pkt_Num + 1;
             
-            if(Current_Event.Pkt_Num != N) {
-                Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
-            }
+                if(Current_Event.Pkt_Num != N) {
+                    Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
+                }
+            //}
         }
-    } else {
-        Dequeue(&Current_Event);
     }
 }
 
@@ -44,10 +41,9 @@ void Receiver(Event Current_Event) {
 	/* Your receiver code here */
     
     if(Current_Event.Error == 0) {
+        Dequeue(&Current_Event);
         Deliver(Current_Event, Current_Event.Time);
         Channel(SEND_ACK, Current_Event.Seq_Num, 0, Current_Event.Time);
-    } else {
-        Dequeue(&Current_Event);
     }
 }
 
