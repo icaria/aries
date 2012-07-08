@@ -21,10 +21,9 @@ void Sender(Event Current_Event) {
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     } else if(Current_Event.Type == RECEIVE_ACK) {
         //printf("RECEIVED ACK\n");
-	Dequeue(&Current_Event);
-        Current_Event.Seq_Num = (Current_Event.Seq_Num + 1) % 2;
-        Current_Event.Pkt_Num = Current_Event.Pkt_Num + 1;
-
+        Dequeue(&Current_Event);
+        //Current_Event.Seq_Num = (Current_Event.Seq_Num + 1) % 2;
+        //Current_Event.Pkt_Num = Current_Event.Pkt_Num + 1;
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     }
 }
@@ -61,7 +60,7 @@ int main()
 	while (Queue_Head != NULL)
 	{
 		Dequeue(&Current_Event);
-		
+		/*
 		if (    (Current_Event.Type == RECEIVE_ACK)
 			|| (Current_Event.Type == START_SEND)
 			|| (Current_Event.Type == TIMEOUT))
@@ -73,7 +72,8 @@ int main()
 		{
 			Print(Current_Event);
 			Receiver(Current_Event);
-		}
+		}*/
+        Sender(Current_Event);
 	}
 	
 	return 0;
