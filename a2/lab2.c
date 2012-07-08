@@ -18,7 +18,7 @@ void Sender(Event Current_Event) {
 
     if(Current_Event.Error == 0) {
         
-        printf("Current Event: Type:%d, Seq_Num:%d, Pkt_Num:%d", Current_Event.Type, Current_Event.Seq_Num, Current_Event.Pkt_Num);
+        printf("Current Event: Type:%d, Seq_Num:%d, Pkt_Num:%d \n", Current_Event.Type, Current_Event.Seq_Num, Current_Event.Pkt_Num);
         
         if(Current_Event.Type == START_SEND) {
             Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
