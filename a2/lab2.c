@@ -20,14 +20,14 @@ void Sender(Event Current_Event) {
         if(Current_Event.Type == START_SEND) {
             Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == TIMEOUT) {
-            Dequeue(&Current_Event);
-            Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
+            //Dequeue(&Current_Event);
+            //Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == RECEIVE_ACK) {
-
+            if(Queue_Head != NULL) {
             //if(Current_Event.Type == TIMEOUT) {
-                Current_Event.Seq_Num = (Queue_Head.Seq_Num + 1) % 2;
-                Current_Event.Pkt_Num = Queue_Head.Pkt_Num + 1;
-            
+                Current_Event.Seq_Num = (Current_Event.Seq_Num + 1) % 2;
+                Current_Event.Pkt_Num = Current_Event.Pkt_Num + 1;
+            }
                 if(Current_Event.Pkt_Num != N) {
                     Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
                 }
