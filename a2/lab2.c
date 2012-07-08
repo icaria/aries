@@ -31,6 +31,8 @@ void Sender(Event Current_Event) {
                 Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
             }
         }
+    } else {
+        Dequeue(&Current_Event);
     }
 }
 
@@ -41,6 +43,8 @@ void Receiver(Event Current_Event) {
     if(Current_Event.Error == 0) {
         Deliver(Current_Event, Current_Event.Time);
         Channel(SEND_ACK, Current_Event.Seq_Num, 0, Current_Event.Time);
+    } else {
+        Dequeue(&Current_Event);
     }
 }
 
