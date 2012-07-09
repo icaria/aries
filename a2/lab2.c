@@ -103,9 +103,6 @@ void GBN_Sender(Event Current_Event) {
             if(Current_Event.Pkt_Num < N) {
                 Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
             }
-	    if(Current_Event.Pkt_Num == (N-1)) {
-		printf("%f,%d,\n", Current_Event.Time, Window_Size);
-	    }
         }
     }
 }
@@ -194,7 +191,7 @@ int main(int argc, char* argv[])
 	// Run this AFTER the above variables are set
 	GetInput(argc, argv);	
 
-
+	int received = 0;
 	Initialization();
 	
 	while (Queue_Head != NULL)
@@ -207,13 +204,21 @@ int main(int argc, char* argv[])
 		{
 			//Print(Current_Event);
 			//Sender(Current_Event);
-			GBN_Sender(Current_Event);
+		//	GBN_Sender(Current_Event);
+			Sender_SRP(Current_Event);
 		}
 		else if (Current_Event.Type == RECEIVE_FRAME)
 		{
+
+		  if (Current_Event.Pkt_Num == (N-1) && Current_Event.Error == 0 && received == 0) {
+			received = 1;	
+			printf("%f,%d,\n", Current_Event.Time, Window_Size);
+}
+
 			//Print(Current_Event);
 			//Receiver(Current_Event);
-			GBN_Receiver(Current_Event);
+		//	GBN_Receiver(Current_Event);
+			Receiver_SRP(Current_Event);
 		}
     	}
 
