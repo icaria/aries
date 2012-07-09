@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "lab2.h"
 
+
+//---------------------------------------------------------------
+
 struct Queue *Queue_Head = NULL;
 int Start_Seq_Num = 0;
 int Start_Pkt_Num = -1;
@@ -17,15 +20,16 @@ double FER;
 int Window_Size;
 int N; /* Total number of packets */
 
+//---------------------------------------------------------------
 /*
 int fprintf ( FILE * stream, const char * format, ... ) { return 0; }
 FILE * fopen ( const char * filename, const char * mode ) { return NULL; }
 int fclose ( FILE * stream ) { return 0; }
 */
 
+//---------------------------------------------------------------
 // ABP Sender
 void Sender(Event Current_Event) {
-	
 
     if(Current_Event.Error == 0) {
         if(Current_Event.Type == START_SEND) {
@@ -49,8 +53,6 @@ void Sender(Event Current_Event) {
 // ABP Receiver
 void Receiver(Event Current_Event) {
 	
-	/* Your receiver code here */
-    
     if(Current_Event.Error == 0) {
        // Dequeue(&Current_Event);
         Deliver(Current_Event, Current_Event.Time);
@@ -124,6 +126,8 @@ void GBN_Receiver(Event Current_Event) {
     }
 }
 
+//-------------------------------------------------------------
+
 void usage()
 {
 	printf("Usage: -f <FER as decimal> -p <PROP_DELAY as ms> -c <C as Mbs> -W <Window size> -N <num packets>\n");
@@ -163,12 +167,12 @@ void GetInput(int argc, char* argv[])
 	}
 
 	// Recalculate Time_Out in case C or Prop_Delay changed
-
 	Time_Out = ((L / C) + (A / C) + (2 * Prop_Delay)) * 1.07 ;
-	printf("FER: %f PROP: %f C: %f W: %d N: %d Timeout: %f\n", FER, Prop_Delay, C, Window_Size, N, Time_Out);
+	
+//printf("FER: %f PROP: %f C: %f W: %d N: %d Timeout: %f\n", FER, Prop_Delay, C, Window_Size, N, Time_Out);
 }
 
-
+//-----------------------------------------------------------------
 
 int main(int argc, char* argv[])
 {
