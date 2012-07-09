@@ -108,16 +108,36 @@ void GBN_Receiver(Event Current_Event) {
 
 void usage()
 {
-	printf("Usage: -f <FER as decimal> -p <PROP_DELAY as ms> -c <C as Mbs>\n");
+	printf("Usage: -f <FER as decimal> -p <PROP_DELAY as ms> -c <C as Mbs> -W <Window size>\n");
+	exit(1);
 }
 
 void GetInput(int argc, char* argv[])
 {
-/*
-	if (argc > 1) {
-		switch(argv[1][0]
+	while (argc > 1 && argv[1][0] == '-') {
+		switch(argv[1][1])
+		{
+			case "f":
+			  FER = atof(argv[1]);
+			  break;
+			case "p":
+			  Prop_Delay = atof(argv[1]) / 1000;
+			  break;
+			ase "c":
+			  C = atof(argv[1]) * 1000000;
+			  break;
+			case "W":
+			  W = atoi(argv[1]);
+			  break;
+			default:
+			  usage();
 
-	}*/
+		}
+
+		++argv;
+		--argc;
+
+	}
 }
 
 int main(int argc, char* argv[])
@@ -148,12 +168,12 @@ int main(int argc, char* argv[])
 			|| (Current_Event.Type == TIMEOUT))
 		{
 			Print(Current_Event);
-			Sender(Current_Event);
+			GBN_Sender(Current_Event);
 		}
 		else if (Current_Event.Type == RECEIVE_FRAME)
 		{
 			Print(Current_Event);
-			Receiver(Current_Event);
+			GBN_Receiver(Current_Event);
 		}
     	}
 
