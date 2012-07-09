@@ -63,6 +63,9 @@ void GBN_Sender(Event Current_Event) {
             End_Pkt_Num++;
             End_Seq_Num = (End_Seq_Num + 1) % (Window_Size + 1);
         }
+        
+        Current_Event.Pkt_Num = End_Pkt_Num;
+        Current_Event.Seq_Num = End_Seq_Num;
 
         Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         
@@ -147,12 +150,12 @@ int main(int argc, char* argv[])
 			|| (Current_Event.Type == TIMEOUT))
 		{
 			Print(Current_Event);
-			Sender(Current_Event);
+			GBN_Sender(Current_Event);
 		}
 		else if (Current_Event.Type == RECEIVE_FRAME)
 		{
 			Print(Current_Event);
-			Receiver(Current_Event);
+			GBN_Receiver(Current_Event);
 		}
     	}
 
