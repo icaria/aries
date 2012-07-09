@@ -21,11 +21,11 @@ int Window_Size;
 int N; /* Total number of packets */
 
 //---------------------------------------------------------------
-/*
+
 int fprintf ( FILE * stream, const char * format, ... ) { return 0; }
 FILE * fopen ( const char * filename, const char * mode ) { return NULL; }
 int fclose ( FILE * stream ) { return 0; }
-*/
+
 
 //---------------------------------------------------------------
 // ABP Sender
@@ -193,7 +193,6 @@ int main(int argc, char* argv[])
 	
 	// Run this AFTER the above variables are set
 	GetInput(argc, argv);	
-	//exit(0);
 
 
 	Initialization();
@@ -206,14 +205,14 @@ int main(int argc, char* argv[])
 			|| (Current_Event.Type == START_SEND)
 			|| (Current_Event.Type == TIMEOUT))
 		{
-			Print(Current_Event);
+			//Print(Current_Event);
 			//Sender(Current_Event);
 			GBN_Sender(Current_Event);
 		}
 		else if (Current_Event.Type == RECEIVE_FRAME)
 		{
-			Print(Current_Event);
-//			Receiver(Current_Event);
+			//Print(Current_Event);
+			//Receiver(Current_Event);
 			GBN_Receiver(Current_Event);
 		}
     	}
