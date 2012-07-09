@@ -23,15 +23,24 @@ EXEC = a.out					# executable name
 
 .PHONY : run
 
-${EXEC} : ${OBJECTS}				
+.PHONY : left
+.PHONY : right
+
+${EXEC} : ${OBJECTS} 				
 	${CXX} ${CXXFLAGS} $^
 
 
-#%.o : %.c
-#	${CXX} $^ -c -o $@
+%.o : %.c
+	 
     
 clean :						# remove files that can be regenerated
 	rm -f lab2.o layer2.txt layer3.txt ${EXEC}
 
 run :
 	./${EXEC}
+
+left:
+	vim layer2.txt
+
+right:
+	vim layer3.txt

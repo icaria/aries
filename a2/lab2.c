@@ -89,7 +89,7 @@ void GBN_Sender(Event Current_Event) {
             Current_Event.Seq_Num = End_Seq_Num;
             Current_Event.Pkt_Num = End_Pkt_Num;
             
-            if(Current_Event.Pkt_Num != N) {
+            if(Current_Event.Pkt_Num < N) {
                 Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
             }
         }
@@ -120,17 +120,20 @@ void GetInput(int argc, char* argv[])
 		switch(argv[1][1])
 		{
 			case 'f':
-			  FER = atof(argv[1]);
+			  FER = atof(argv[2]);
 			  break;
 			case 'p':
-			  Prop_Delay = atof(argv[1]) / 1000;
+			  Prop_Delay = atof(argv[2]) / 1000;
 			  break;
 			case 'c':
-			  C = atof(argv[1]) * 1000000;
+			  C = atof(argv[2]) * 1000000;
 			  break;
 			case 'W':
-			  Window_Size = atoi(argv[1]);
+			  Window_Size = atoi(argv[2]);
 			  break;
+			case 'N':
+			  N = atoi(argv[2]);
+			  break;		  
 			default:
 			  usage();
 
@@ -138,18 +141,27 @@ void GetInput(int argc, char* argv[])
 
 		++argv;
 		--argc;
+		++argv;
+		--argc;
 
 	}
+
+	// Recalculate Time_Out in case C or Prop_Delay changed
+
+	Time_Out = ((L / C) + (A / C) + (2 * Prop_Delay)) * 1.07 ;
+	printf("FER: %f PROP: %f C: %f W: %d N: %d Time: %f\n", FER, Prop_Delay, C, Window_Size, N, Time_Out);
 }
 
 int main(int argc, char* argv[])
 {
 	Event Current_Event;
 	
+	
+
 	/**********************************************/
 	/* Remember to change the following variables */
 	
-	N = 25;//10000;		
+	N = 10000;		
 	C = 1000000;			/* bps */
 	L = 1500*8;			/* bits, Avg length of pkts */
 	A = 54*8;			/* bits */
@@ -159,7 +171,11 @@ int main(int argc, char* argv[])
 	Time_Out = ((L / C) + (A / C) + (2 * Prop_Delay)) * 1.07 ;
 	/**********************************************/
 	
-	//GetInput(argc, argv);
+	// Run this AFTER the above variables are set
+	GetInput(argc, argv);	
+	exit(0);
+
+
 	Initialization();
 	
 	while (Queue_Head != NULL)
