@@ -3,6 +3,8 @@
 #include "lab2.h"
 
 struct Queue *Queue_Head = NULL;
+struct Queue *Sender_Queue = NULL;
+int Number_In_Flight = 0;
 double C;
 double A;
 double L;  /* Avg length of packets */
@@ -23,14 +25,14 @@ void Sender(Event Current_Event) {
             //Dequeue(&Current_Event);
             Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == RECEIVE_ACK) {
-		Dequeue(&Current_Event);
+            Dequeue(&Current_Event);
 
-                Current_Event.Seq_Num = (Current_Event.Seq_Num + 1) % 2;
-                Current_Event.Pkt_Num = Current_Event.Pkt_Num + 1;
+            Current_Event.Seq_Num = (Current_Event.Seq_Num + 1) % 2;
+            Current_Event.Pkt_Num = Current_Event.Pkt_Num + 1;
                 
-		if(Current_Event.Pkt_Num != N) {
-                    Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
-                }
+            if(Current_Event.Pkt_Num != N) {
+                Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
+            }
         }
     }
 }
@@ -48,10 +50,14 @@ void Receiver(Event Current_Event) {
 
 void GBN_Sender(Event Current_Event) {
     
+    if(Number_In_Flight < Window_Size) {
+        
+    }
 }
 
 void GBN_Receiver(Event Current_Event) {
 
+    
 }
 
 
