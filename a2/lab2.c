@@ -53,48 +53,43 @@ void Receiver(Event Current_Event) {
 
 void GBN_Sender(Event Current_Event) {
     
+    if(Current_Event.Type == START_SEND) {
+        if(Start_Pkt_Num == -1) {
+            Start_Pkt_Num = Current_Event.Pkt_Num;
+            Start_Seq_Num = Current_Event.Seq_Num;
+            End_Pkt_Num = Current_Event.Pkt_Num + Window_Size - 1;
+            End_Seq_Num = (Current_Event.Seq_Num + Window_Size - 1) % Window_Size;
+        }
         
-    if(Number_In_Flight < Window_Size) {
+        int Number_Pkt_Send = End_Pkt_Num - Start_Pkt_Num;
         
-        if(Current_Event.Type == START_SEND) {
-            if(Start_Pkt_Num == -1) {
-                Start_Pkt_Num = Current_Event.Pkt_Num;
-                Start_Seq_Num = Current_Event.Seq_Num;
-                End_Pkt_Num = Current_Event.Pkt_Num + Window_Size - 1;
-                End_Seq_Num = (Current_Event.Seq_Num + Window_Size - 1) % Window_Size;
-            }
-            
-            int Number_Pkt_Send = End_Pkt_Num - Start_Pkt_Num;
-            
-            for(int i = 0; i < Number_Pkt_Send; i++) {
-                Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % Window_Size, Current_Event.Pkt_Num + i, Current_Event.Time);
-            }
+        for(int i = 0; i < Number_Pkt_Send; i++) {
+            Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % Window_Size, Current_Event.Pkt_Num + i, Current_Event.Time);
+        }
         
-        } else if(Current_Event.Type == TIMEOUT) {
+    } else if(Current_Event.Type == TIMEOUT) {
+        
+        int Number_Pkt_Resend = End_Pkt_Num - Current_Event.Pkt_Num;
+        
+        for(int i = 0; i < Number_Pkt_Resend; i++) {
+            Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % Window_Size, Current_Event.Pkt_Num + i, Current_Event.Time);
+        }
+        
+    } else if(Current_Event.Type == RECEIVE_ACK) {
+        
+        if(Current_Event.Pkt_Num == Start_Pkt_Num) {
+            Start_Pkt_Num++;
+            Start_Seq_Num = (Start_Seq_Num + 1) % Window_Size;
+            End_Pkt_Num++;
+            End_Seq_Num = (End_Seq_Num + 1) % Window_Size;
             
-            int Number_Pkt_Resend = End_Pkt_Num - Current_Event.Pkt_Num;
+            Current_Event.Seq_Num = End_Seq_Num;
+            Current_Event.Pkt_Num = End_Pkt_Num;
             
-            for(int i = 0; i < Number_Pkt_Resend; i++) {
-                Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % Window_Size, Current_Event.Pkt_Num + i, Current_Event.Time);
-            }
-            
-        } else if(Current_Event.Type == RECEIVE_ACK) {
-            
-            if(Current_Event.Pkt_Num == Start_Pkt_Num) {
-                Start_Pkt_Num++;
-                Start_Seq_Num = (Start_Seq_Num + 1) % Window_Size;
-                End_Pkt_Num++;
-                End_Seq_Num = (End_Seq_Num + 1) % Window_Size;
-            
-                Current_Event.Seq_Num = End_Seq_Num;
-                Current_Event.Pkt_Num = End_Pkt_Num;
-            
-                if(Current_Event.Pkt_Num != N) {
-                    Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
-                }
+            if(Current_Event.Pkt_Num != N) {
+                Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
             }
         }
-        Channel(SEND_ACK, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
     }
 }
 
