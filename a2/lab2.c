@@ -35,7 +35,6 @@ void Sender(Event Current_Event) {
         if(Current_Event.Type == START_SEND) {
             Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == TIMEOUT) {
-            //Dequeue(&Current_Event);
             Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == RECEIVE_ACK) {
             Dequeue(&Current_Event);
@@ -54,7 +53,6 @@ void Sender(Event Current_Event) {
 void Receiver(Event Current_Event) {
 	
     if(Current_Event.Error == 0) {
-       // Dequeue(&Current_Event);
         Deliver(Current_Event, Current_Event.Time);
         Channel(SEND_ACK, Current_Event.Seq_Num, 0, Current_Event.Time);
     }
