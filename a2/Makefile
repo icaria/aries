@@ -22,9 +22,11 @@ EXEC = a.out					# executable name
 .PHONY : clean					# not file names
 
 .PHONY : run
+.PHONY : go
 
 .PHONY : left
 .PHONY : right
+
 
 ${EXEC} : ${OBJECTS} 				
 	${CXX} ${CXXFLAGS} $^
@@ -38,6 +40,9 @@ clean :						# remove files that can be regenerated
 
 run :
 	./${EXEC}
+
+go:
+	python go.py
 
 left:
 	vim layer2.txt

@@ -17,6 +17,12 @@ double FER;
 int Window_Size;
 int N; /* Total number of packets */
 
+/*
+int fprintf ( FILE * stream, const char * format, ... ) { return 0; }
+FILE * fopen ( const char * filename, const char * mode ) { return NULL; }
+int fclose ( FILE * stream ) { return 0; }
+*/
+
 void Sender(Event Current_Event) {
 	
 	/* You sender code here */
@@ -36,6 +42,9 @@ void Sender(Event Current_Event) {
             if(Current_Event.Pkt_Num != N) {
                 Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
             }
+	    else {
+		printf("Last Packet Without Error Time: %f\n", Current_Event.Time);
+	    }
         }
     }
 }
@@ -92,6 +101,9 @@ void GBN_Sender(Event Current_Event) {
             if(Current_Event.Pkt_Num < N) {
                 Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
             }
+	    if(Current_Event.Pkt_Num == (N-1)) {
+		printf("%f\n", Current_Event.Time);
+	    }
         }
     }
 }
@@ -152,6 +164,8 @@ void GetInput(int argc, char* argv[])
 	printf("FER: %f PROP: %f C: %f W: %d N: %d Time: %f\n", FER, Prop_Delay, C, Window_Size, N, Time_Out);
 }
 
+
+
 int main(int argc, char* argv[])
 {
 	Event Current_Event;
@@ -173,7 +187,7 @@ int main(int argc, char* argv[])
 	
 	// Run this AFTER the above variables are set
 	GetInput(argc, argv);	
-	exit(0);
+	//exit(0);
 
 
 	Initialization();
@@ -187,11 +201,13 @@ int main(int argc, char* argv[])
 			|| (Current_Event.Type == TIMEOUT))
 		{
 			Print(Current_Event);
+			//Sender(Current_Event);
 			GBN_Sender(Current_Event);
 		}
 		else if (Current_Event.Type == RECEIVE_FRAME)
 		{
 			Print(Current_Event);
+//			Receiver(Current_Event);
 			GBN_Receiver(Current_Event);
 		}
     	}

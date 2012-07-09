@@ -1,16 +1,29 @@
 import subprocess;
 
-WindowSize5 = 5
-WindowSize15 = 15
+W5 = 5
+W15 = 15
+list = [5, 15]
+q3 = open("q3.txt", "w")
+q4 = open("q4.txt", "w")
+q5 = open("q5.txt", "w")
 
-#--- Question 3
+#------------------Question 3
+print "---------------------------Q3"
 step = 0.1;
 max = 0.9
-FER = 0.1;
 
 # FER = 0.05 case
-FER = 0.05
 
+for w in list:
+	FER = 0.05
+	subprocess.call(['./a.out', '-f', str(FER), '-W', str(w)], stdout=q3)
+
+
+	FER = 0.1;
+	i = FER;
+	while i <= max:
+		subprocess.call(['./a.out', '-f', str(i), '-W', str(w)])
+		i += step
 
 
 
