@@ -60,8 +60,21 @@ void GBN_Receiver(Event Current_Event) {
     
 }
 
+void usage()
+{
+	printf("Usage: -f <FER as decimal> -p <PROP_DELAY as ms> -c <C as Mbs>\n");
+}
 
-int main()
+void GetInput(int argv, char* argv[])
+{
+/*
+	if (argc > 1) {
+		switch(argv[1][0]
+
+	}*/
+}
+
+int main(int argc, char* argv[])
 {
 	Event Current_Event;
 	
