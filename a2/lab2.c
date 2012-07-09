@@ -110,7 +110,7 @@ void usage()
 	printf("Usage: -f <FER as decimal> -p <PROP_DELAY as ms> -c <C as Mbs>\n");
 }
 
-void GetInput(int argv, char* argv[])
+void GetInput(int argc, char* argv[])
 {
 /*
 	if (argc > 1) {
