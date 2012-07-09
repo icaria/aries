@@ -80,7 +80,7 @@ void GBN_Sender(Event Current_Event) {
         
     } else if(Current_Event.Type == RECEIVE_ACK) {
         
-        if(Current_Event.Pkt_Num == Start_Pkt_Num) {
+        if(Current_Event.Seq_Num == Start_Seq_Num) {
             Start_Pkt_Num++;
             Start_Seq_Num = (Start_Seq_Num + 1) % (Window_Size + 1);
             End_Pkt_Num++;
