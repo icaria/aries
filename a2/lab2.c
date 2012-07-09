@@ -116,17 +116,17 @@ void GetInput(int argc, char* argv[])
 	while (argc > 1 && argv[1][0] == '-') {
 		switch(argv[1][1])
 		{
-			case "f":
+			case 'f':
 			  FER = atof(argv[1]);
 			  break;
-			case "p":
+			case 'p':
 			  Prop_Delay = atof(argv[1]) / 1000;
 			  break;
-			ase "c":
+			case 'c':
 			  C = atof(argv[1]) * 1000000;
 			  break;
-			case "W":
-			  W = atoi(argv[1]);
+			case 'W':
+			  Window_Size = atoi(argv[1]);
 			  break;
 			default:
 			  usage();
@@ -146,16 +146,17 @@ int main(int argc, char* argv[])
 	/**********************************************/
 	/* Remember to change the following variables */
 	
-	N = 10000;		
+	N = 25;//10000;		
 	C = 1000000;			/* bps */
 	L = 1500*8;			/* bits, Avg length of pkts */
 	A = 54*8;			/* bits */
 	Prop_Delay = 0.05;		/* seconds */
-	Window_Size = 1;
+	Window_Size = 5;
 	FER = 0.01;
 	Time_Out = ((L / C) + (A / C) + (2 * Prop_Delay)) * 1.07 ;
 	/**********************************************/
 	
+	//GetInput(argc, argv);
 	Initialization();
 	
 	while (Queue_Head != NULL)
