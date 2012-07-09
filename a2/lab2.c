@@ -23,9 +23,9 @@ FILE * fopen ( const char * filename, const char * mode ) { return NULL; }
 int fclose ( FILE * stream ) { return 0; }
 */
 
+// ABP Sender
 void Sender(Event Current_Event) {
 	
-	/* You sender code here */
 
     if(Current_Event.Error == 0) {
         if(Current_Event.Type == START_SEND) {
@@ -42,13 +42,11 @@ void Sender(Event Current_Event) {
             if(Current_Event.Pkt_Num != N) {
                 Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
             }
-	    else {
-		printf("Last Packet Without Error Time: %f\n", Current_Event.Time);
-	    }
         }
     }
 }
 
+// ABP Receiver
 void Receiver(Event Current_Event) {
 	
 	/* Your receiver code here */
@@ -60,7 +58,11 @@ void Receiver(Event Current_Event) {
     }
 }
 
+//-------------------------------------------------------------
+
 void GBN_Sender(Event Current_Event) {
+
+    if (Current_Event.Pkt_Num >= N) { return; }
     
     if(Current_Event.Type == START_SEND) {
         if(Start_Pkt_Num == -1) {
@@ -102,7 +104,7 @@ void GBN_Sender(Event Current_Event) {
                 Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
             }
 	    if(Current_Event.Pkt_Num == (N-1)) {
-		printf("%f\n", Current_Event.Time);
+		printf("%f,%d,\n", Current_Event.Time, Window_Size);
 	    }
         }
     }
@@ -110,7 +112,9 @@ void GBN_Sender(Event Current_Event) {
 
 void GBN_Receiver(Event Current_Event) {
 
-    if(Current_Event.Error == 0) {
+    if (Current_Event.Pkt_Num >= N) { return; }
+    
+	if(Current_Event.Error == 0) {
         
         if(Current_Event.Pkt_Num == Last_Inorder_PktNum_Received + 1) {
             Last_Inorder_PktNum_Received++;
@@ -122,7 +126,7 @@ void GBN_Receiver(Event Current_Event) {
 
 void usage()
 {
-	printf("Usage: -f <FER as decimal> -p <PROP_DELAY as ms> -c <C as Mbs> -W <Window size>\n");
+	printf("Usage: -f <FER as decimal> -p <PROP_DELAY as ms> -c <C as Mbs> -W <Window size> -N <num packets>\n");
 	exit(1);
 }
 
@@ -161,7 +165,7 @@ void GetInput(int argc, char* argv[])
 	// Recalculate Time_Out in case C or Prop_Delay changed
 
 	Time_Out = ((L / C) + (A / C) + (2 * Prop_Delay)) * 1.07 ;
-	printf("FER: %f PROP: %f C: %f W: %d N: %d Time: %f\n", FER, Prop_Delay, C, Window_Size, N, Time_Out);
+	printf("FER: %f PROP: %f C: %f W: %d N: %d Timeout: %f\n", FER, Prop_Delay, C, Window_Size, N, Time_Out);
 }
 
 

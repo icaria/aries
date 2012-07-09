@@ -8,7 +8,6 @@ q4 = open("q4.txt", "w")
 q5 = open("q5.txt", "w")
 
 #------------------Question 3
-print "---------------------------Q3"
 step = 0.1;
 max = 0.9
 
@@ -22,8 +21,8 @@ for w in list:
 	FER = 0.1;
 	i = FER;
 	while i <= max:
-		subprocess.call(['./a.out', '-f', str(i), '-W', str(w)])
-		i += step
+	    subprocess.call(['./a.out', '-f', str(i), '-W', str(w)], stdout=q3)
+            i += step
 
 
 
