@@ -89,7 +89,7 @@ void GBN_Sender(Event Current_Event) {
             Current_Event.Seq_Num = End_Seq_Num;
             Current_Event.Pkt_Num = End_Pkt_Num;
             
-            if(Current_Event.Pkt_Num != N) {
+            if(Current_Event.Pkt_Num < N) {
                 Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
             }
         }
