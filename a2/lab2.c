@@ -46,6 +46,14 @@ void Receiver(Event Current_Event) {
     }
 }
 
+void GBN_Sender(Event Current_Event) {
+    
+}
+
+void GBN_Receiver(Event Current_Event) {
+
+}
+
 
 int main()
 {
