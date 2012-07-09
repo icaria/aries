@@ -21,17 +21,16 @@ void Sender(Event Current_Event) {
             Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == TIMEOUT) {
             //Dequeue(&Current_Event);
-            //Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
+            Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         } else if(Current_Event.Type == RECEIVE_ACK) {
-            if(Queue_Head != NULL) {
-            //if(Current_Event.Type == TIMEOUT) {
-                Current_Event.Seq_Num = (Queue_Head->Seq_Num + 1) % 2;
-                Current_Event.Pkt_Num = Queue_Head->Pkt_Num + 1;
-            }
-                if(Current_Event.Pkt_Num != N) {
+		Dequeue(&Current_Event);
+
+                Current_Event.Seq_Num = (Current_Event.Seq_Num + 1) % 2;
+                Current_Event.Pkt_Num = Current_Event.Pkt_Num + 1;
+                
+		if(Current_Event.Pkt_Num != N) {
                     Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
                 }
-            //}
         }
     }
 }
@@ -41,7 +40,7 @@ void Receiver(Event Current_Event) {
 	/* Your receiver code here */
     
     if(Current_Event.Error == 0) {
-        Dequeue(&Current_Event);
+       // Dequeue(&Current_Event);
         Deliver(Current_Event, Current_Event.Time);
         Channel(SEND_ACK, Current_Event.Seq_Num, 0, Current_Event.Time);
     }
@@ -62,7 +61,7 @@ int main()
 	Prop_Delay = 0.05;		/* seconds */
 	Window_Size = 1;
 	FER = 0.01;
-	Time_Out = (L / C) + (A / C) + (2 * Prop_Delay);
+	Time_Out = 110; //(L / C) + (A / C) + (2 * Prop_Delay);
 	/**********************************************/
 	
 	Initialization();
@@ -83,7 +82,7 @@ int main()
 			Print(Current_Event);
 			Receiver(Current_Event);
 		}
-    }
-	
+    	}
+
 	return 0;
 }
