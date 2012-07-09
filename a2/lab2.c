@@ -57,32 +57,31 @@ void GBN_Sender(Event Current_Event) {
         if(Start_Pkt_Num == -1) {
             Start_Pkt_Num = Current_Event.Pkt_Num;
             Start_Seq_Num = Current_Event.Seq_Num;
-            End_Pkt_Num = Current_Event.Pkt_Num + Window_Size - 1;
-            End_Seq_Num = (Current_Event.Seq_Num + Window_Size - 1) % Window_Size;
+            End_Pkt_Num = Start_Pkt_Num;
+            End_Seq_Num = Start_Seq_Num;
+        } else {
+            End_Pkt_Num++;
+            End_Seq_Num = (End_Seq_Num + 1) % (Window_Size + 1);
         }
-        
-        int Number_Pkt_Send = End_Pkt_Num - Start_Pkt_Num;
-        int i = 0;
-        
-        for(i = 0; i < Number_Pkt_Send; i++) {
-            Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % Window_Size, Current_Event.Pkt_Num + i, Current_Event.Time);
-        }
+
+        Channel(SEND_FRAME, Current_Event.Seq_Num, Current_Event.Pkt_Num, Current_Event.Time);
         
     } else if(Current_Event.Type == TIMEOUT) {
         
-        int Number_Pkt_Resend = End_Pkt_Num - Current_Event.Pkt_Num;
-        int i = 0;
-        for(i = 0; i < Number_Pkt_Resend; i++) {
-            Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % Window_Size, Current_Event.Pkt_Num + i, Current_Event.Time);
+        if(Current_Event.Pkt_Num == Start_Pkt_Num) {
+            int i = 0;
+            for(i = 0; i < Window_Size; i++) {
+                Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % (Window_Size + 1), Current_Event.Pkt_Num + i, Current_Event.Time);
+            }
         }
         
     } else if(Current_Event.Type == RECEIVE_ACK) {
         
         if(Current_Event.Pkt_Num == Start_Pkt_Num) {
             Start_Pkt_Num++;
-            Start_Seq_Num = (Start_Seq_Num + 1) % Window_Size;
+            Start_Seq_Num = (Start_Seq_Num + 1) % (Window_Size + 1);
             End_Pkt_Num++;
-            End_Seq_Num = (End_Seq_Num + 1) % Window_Size;
+            End_Seq_Num = (End_Seq_Num + 1) % (Window_Size + 1);
             
             Current_Event.Seq_Num = End_Seq_Num;
             Current_Event.Pkt_Num = End_Pkt_Num;
@@ -101,8 +100,8 @@ void GBN_Receiver(Event Current_Event) {
         if(Current_Event.Pkt_Num == Last_Inorder_PktNum_Received + 1) {
             Last_Inorder_PktNum_Received++;
             Deliver(Current_Event, Current_Event.Time);
-            Channel(SEND_ACK, Current_Event.Seq_Num, Last_Inorder_PktNum_Received, Current_Event.Time);
         }
+        Channel(SEND_ACK, Current_Event.Seq_Num, 0, Current_Event.Time);
     }
 }
 
