@@ -61,7 +61,7 @@ int main()
 	Prop_Delay = 0.05;		/* seconds */
 	Window_Size = 1;
 	FER = 0.01;
-	Time_Out = 110; //(L / C) + (A / C) + (2 * Prop_Delay);
+	Time_Out = ((L / C) + (A / C) + (2 * Prop_Delay)) * 1.07 ;
 	/**********************************************/
 	
 	Initialization();
