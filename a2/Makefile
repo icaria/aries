@@ -7,13 +7,13 @@
 
 ########## Variables ##########
 
-CXX = g++					# compiler
+CXX = gcc					# compiler
 #CXXFLAGS = -g -Wall -MMD			# compiler flags
 CXXFLAGS = -m32
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-#OBJECTS = lab2linux.o lab2.o 			# object files forming executable
-OBJECTS = lab2.o
+OBJECTS = lab2linux.o lab2.c 			# object files forming executable
+
 
 EXEC = a.out					# executable name
 
@@ -21,11 +21,17 @@ EXEC = a.out					# executable name
 
 .PHONY : clean					# not file names
 
-${EXEC} : ${OBJECTS}				# link step
-	${CXX} $^ -o $@			# additional object files before $^
+.PHONY : run
 
-%.o : %.c
-	${CXX} $^ -c -o $@
+${EXEC} : ${OBJECTS}				
+	${CXX} ${CXXFLAGS} $^
+
+
+#%.o : %.c
+#	${CXX} $^ -c -o $@
     
 clean :						# remove files that can be regenerated
 	rm -f lab2.o layer2.txt layer3.txt ${EXEC}
+
+run :
+	./${EXEC}
