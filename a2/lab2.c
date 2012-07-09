@@ -62,16 +62,17 @@ void GBN_Sender(Event Current_Event) {
         }
         
         int Number_Pkt_Send = End_Pkt_Num - Start_Pkt_Num;
+        int i = 0;
         
-        for(int i = 0; i < Number_Pkt_Send; i++) {
+        for(i = 0; i < Number_Pkt_Send; i++) {
             Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % Window_Size, Current_Event.Pkt_Num + i, Current_Event.Time);
         }
         
     } else if(Current_Event.Type == TIMEOUT) {
         
         int Number_Pkt_Resend = End_Pkt_Num - Current_Event.Pkt_Num;
-        
-        for(int i = 0; i < Number_Pkt_Resend; i++) {
+        int i = 0;
+        for(i = 0; i < Number_Pkt_Resend; i++) {
             Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % Window_Size, Current_Event.Pkt_Num + i, Current_Event.Time);
         }
         
