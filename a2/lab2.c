@@ -20,6 +20,9 @@ double FER;
 int Window_Size;
 int N; /* Total number of packets */
 
+//GBN counter
+int counter = 0;
+
 //---------------------------------------------------------------
 
 int fprintf ( FILE * stream, const char * format, ... ) { return 0; }
@@ -82,11 +85,19 @@ void GBN_Sender(Event Current_Event) {
         
     } else if(Current_Event.Type == TIMEOUT) {
         
-        if(Current_Event.Pkt_Num == Start_Pkt_Num) {
+        if(Current_Event.Pkt_Num >= Start_Pkt_Num && counter == 0) {
+            counter = End_Pkt_Num - Current_Event.Pkt_Num;
+            
             int i = 0;
+            double nodal_delay = L/C;
             for(i = 0; i < Window_Size; i++) {
-                Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % (Window_Size + 1), Current_Event.Pkt_Num + i, Current_Event.Time);
+                Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % (Window_Size + 1), Current_Event.Pkt_Num + i, Current_Event.Time + i*nodal_delay);
             }
+            
+            
+        }
+        else if (counter > 0) {
+            counter --;
         }
         
     } else if(Current_Event.Type == RECEIVE_ACK) {
