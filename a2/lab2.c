@@ -1,3 +1,19 @@
+//---------------------------------------------------------------
+// ECE 358 Assignment 2
+// Stephen Chen		20274003 s38chen
+// Gabriella Grandilli  20294003 gggrandi
+//
+//
+//
+// to compile: 	make
+// to run: 	./a.out
+//
+//
+// Our ABP functions: Sender(Event) and Receiver(Event)
+// Our GBN functions: GBN_Sender(Event) and GBN_Receiver(Event)
+//---------------------------------------------------------------
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "lab2.h"
@@ -10,7 +26,6 @@ int Start_Seq_Num = 0;
 int Start_Pkt_Num = -1;
 int End_Seq_Num = -1;
 int End_Pkt_Num = 0;
-//int Last_Inorder_PktNum_Received = -1;
 int Last_Seq_Num = 0;
 int hasStarted = 0;
 
@@ -25,12 +40,6 @@ int N; /* Total number of packets */
 
 //GBN counter
 int counter = 0;
-
-//---------------------------------------------------------------
-
-int fprintf ( FILE * stream, const char * format, ... ) { return 0; }
-FILE * fopen ( const char * filename, const char * mode ) { return NULL; }
-int fclose ( FILE * stream ) { return 0; }
 
 
 //---------------------------------------------------------------
@@ -148,6 +157,7 @@ void usage()
 	exit(1);
 }
 
+// Get commandline input to customize parameters
 void GetInput(int argc, char* argv[])
 {
 	while (argc > 1 && argv[1][0] == '-') {
@@ -193,7 +203,6 @@ int main(int argc, char* argv[])
 	Event Current_Event;
 	
 	
-
 	/**********************************************/
 	/* Remember to change the following variables */
 	
@@ -202,7 +211,7 @@ int main(int argc, char* argv[])
 	L = 1500*8;			/* bits, Avg length of pkts */
 	A = 54*8;			/* bits */
 	Prop_Delay = 0.05;		/* seconds */
-	Window_Size = 5;
+	Window_Size = 1;
 	FER = 0.01;
 	Time_Out = ((L / C) + (A / C) + (2 * Prop_Delay)) * 1.07 ;
 	/**********************************************/
@@ -210,7 +219,6 @@ int main(int argc, char* argv[])
 	// Run this AFTER the above variables are set
 	GetInput(argc, argv);	
 
-	int received = 0;
 	Initialization();
 	
 	while (Queue_Head != NULL)
@@ -221,24 +229,14 @@ int main(int argc, char* argv[])
 			|| (Current_Event.Type == START_SEND)
 			|| (Current_Event.Type == TIMEOUT))
 		{
-//			Print(Current_Event);
-			//Sender(Current_Event);
-			Sender(Current_Event);
-		//	Sender_SRP(Current_Event);
+			Print(Current_Event);
+			GBN_Sender(Current_Event);
 		}
 		else if (Current_Event.Type == RECEIVE_FRAME)
 		{
 
-		  if (Current_Event.Pkt_Num == (N-1) && 
-		   Current_Event.Error == 0 && received == 0) {
-			printf("%f,%d,\n", Current_Event.Time, Window_Size);
-			received = 1;	
-		   }
-
-//			Print(Current_Event);
-			//Receiver(Current_Event);
-			Receiver(Current_Event);
-		//	Receiver_SRP(Current_Event);
+			Print(Current_Event);
+			GBN_Receiver(Current_Event);
 		}
     	}
 
