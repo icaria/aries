@@ -10,7 +10,10 @@ int Start_Seq_Num = 0;
 int Start_Pkt_Num = -1;
 int End_Seq_Num = -1;
 int End_Pkt_Num = 0;
-int Last_Inorder_PktNum_Received = -1;
+//int Last_Inorder_PktNum_Received = -1;
+int Last_Seq_Num = 0;
+int hasStarted = 0;
+
 double C;
 double A;
 double L;  /* Avg length of packets */
@@ -90,13 +93,13 @@ void GBN_Sender(Event Current_Event) {
             
             int i = 0;
             double nodal_delay = L/C;
-            for(i = 0; i < Window_Size; i++) {
-                Channel(SEND_FRAME, (Current_Event.Seq_Num + i) % (Window_Size + 1), Current_Event.Pkt_Num + i, Current_Event.Time + i*nodal_delay);
+            for(i = Start_Pkt_Num; i <= End_Pkt_Num; i++) {
+                Channel(SEND_FRAME, (i) % (Window_Size + 1), i, Current_Event.Time + (i - Start_Pkt_Num)*nodal_delay);
             }
             
             
         }
-        else if (counter > 0) {
+        else if(Current_Event.Pkt_Num >= Start_Pkt_Num && counter > 0) {
             counter --;
         }
         
@@ -122,14 +125,19 @@ void GBN_Receiver(Event Current_Event) {
 
     if (Current_Event.Pkt_Num >= N) { return; }
     
-	if(Current_Event.Error == 0) {
-        
-        if(Current_Event.Pkt_Num == Last_Inorder_PktNum_Received + 1) {
-            Last_Inorder_PktNum_Received++;
+    if(Current_Event.Error == 0) {
+
+             
+        if(Current_Event.Seq_Num == (Last_Seq_Num) % (Window_Size + 1)) {
+	    hasStarted = 1;
+	    Last_Seq_Num = (Last_Seq_Num + 1) % (Window_Size + 1);
             Deliver(Current_Event, Current_Event.Time);
         }
-        Channel(SEND_ACK, Current_Event.Seq_Num, 0, Current_Event.Time);
-    }
+
+	if (hasStarted == 1) {
+            Channel(SEND_ACK, Current_Event.Seq_Num, 0, Current_Event.Time);
+        }
+     }
 }
 
 //-------------------------------------------------------------
@@ -213,23 +221,24 @@ int main(int argc, char* argv[])
 			|| (Current_Event.Type == START_SEND)
 			|| (Current_Event.Type == TIMEOUT))
 		{
-			//Print(Current_Event);
+//			Print(Current_Event);
 			//Sender(Current_Event);
-		//	GBN_Sender(Current_Event);
-			Sender_SRP(Current_Event);
+			Sender(Current_Event);
+		//	Sender_SRP(Current_Event);
 		}
 		else if (Current_Event.Type == RECEIVE_FRAME)
 		{
 
-		  if (Current_Event.Pkt_Num == (N-1) && Current_Event.Error == 0 && received == 0) {
-			received = 1;	
+		  if (Current_Event.Pkt_Num == (N-1) && 
+		   Current_Event.Error == 0 && received == 0) {
 			printf("%f,%d,\n", Current_Event.Time, Window_Size);
-}
+			received = 1;	
+		   }
 
-			//Print(Current_Event);
+//			Print(Current_Event);
 			//Receiver(Current_Event);
-		//	GBN_Receiver(Current_Event);
-			Receiver_SRP(Current_Event);
+			Receiver(Current_Event);
+		//	Receiver_SRP(Current_Event);
 		}
     	}
 
